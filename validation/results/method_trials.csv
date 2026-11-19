@@ -1,0 +1,201 @@
+method,factor,level,seed,truth_nm,predicted_nm,error_nm,abs_error_nm,relative_error,true_microstrain,predicted_microstrain,status,reason,warnings,usable_reflections
+Scherrer,analytical,0.0,534,10,10.0,0.0,0.0,0.0,0.0,,predicted,,,5
+Williamson–Hall,analytical,0.0,534,10,10.0,0.0,0.0,0.0,0.0,0.0,predicted,,,5
+Scherrer,analytical,0.001,534,10,,,,,0.001,,input_rejected,Nonzero simulated microstrain invalidates size-only inference,,5
+Williamson–Hall,analytical,0.001,534,10,10.000000000000002,1.7763568394002505e-15,1.7763568394002505e-15,1.7763568394002506e-16,0.001,0.001000000000000001,predicted,,,5
+Scherrer,analytical,0.0,534,20,20.0,0.0,0.0,0.0,0.0,,predicted,,,5
+Williamson–Hall,analytical,0.0,534,20,20.0,0.0,0.0,0.0,0.0,0.0,predicted,,Poor W-H linearity: isotropic uniform-deformation assumptions may fail.,5
+Scherrer,analytical,0.001,534,20,,,,,0.001,,input_rejected,Nonzero simulated microstrain invalidates size-only inference,,5
+Williamson–Hall,analytical,0.001,534,20,19.999999999999996,-3.552713678800501e-15,3.552713678800501e-15,1.7763568394002506e-16,0.001,0.0009999999999999996,predicted,,,5
+Scherrer,analytical,0.0,534,40,40.0,0.0,0.0,0.0,0.0,,predicted,,,5
+Williamson–Hall,analytical,0.0,534,40,40.0,0.0,0.0,0.0,0.0,8.494198649537391e-20,predicted,,Poor W-H linearity: isotropic uniform-deformation assumptions may fail.,5
+Scherrer,analytical,0.001,534,40,,,,,0.001,,input_rejected,Nonzero simulated microstrain invalidates size-only inference,,5
+Williamson–Hall,analytical,0.001,534,40,39.99999999999998,-2.1316282072803006e-14,2.1316282072803006e-14,5.329070518200751e-16,0.001,0.0009999999999999998,predicted,,,5
+Scherrer,analytical,0.0,534,80,80.00000000000001,1.4210854715202004e-14,1.4210854715202004e-14,1.7763568394002506e-16,0.0,,predicted,,,5
+Williamson–Hall,analytical,0.0,534,80,80.00000000000001,1.4210854715202004e-14,1.4210854715202004e-14,1.7763568394002506e-16,0.0,8.376868597570054e-20,predicted,,Poor W-H linearity: isotropic uniform-deformation assumptions may fail.,5
+Scherrer,analytical,0.001,534,80,,,,,0.001,,input_rejected,Nonzero simulated microstrain invalidates size-only inference,,5
+Williamson–Hall,analytical,0.001,534,80,79.99999999999996,-4.263256414560601e-14,4.263256414560601e-14,5.329070518200751e-16,0.001,0.0009999999999999998,predicted,,,5
+Scherrer,analytical,0.0,534,100,100.00000000000003,2.842170943040401e-14,2.842170943040401e-14,2.842170943040401e-16,0.0,,predicted,,,5
+Williamson–Hall,analytical,0.0,534,100,99.9999999999979,-2.1032064978498966e-12,2.1032064978498966e-12,2.1032064978498965e-14,0.0,0.0,predicted,,Poor W-H linearity: isotropic uniform-deformation assumptions may fail.,5
+Scherrer,analytical,0.001,534,100,,,,,0.001,,input_rejected,Nonzero simulated microstrain invalidates size-only inference,,5
+Williamson–Hall,analytical,0.001,534,100,99.99999999999801,-1.9895196601282805e-12,1.9895196601282805e-12,1.9895196601282804e-14,0.001,0.000999999999999989,predicted,,,5
+Scherrer,noise,0.0,534,20,20.0,0.0,0.0,0.0,0.0,,predicted,,,5
+Williamson–Hall,noise,0.0,534,20,20.0,0.0,0.0,0.0,0.0,0.0,predicted,,Poor W-H linearity: isotropic uniform-deformation assumptions may fail.,5
+Scherrer,noise,0.0,535,20,20.0,0.0,0.0,0.0,0.0,,predicted,,,5
+Williamson–Hall,noise,0.0,535,20,20.0,0.0,0.0,0.0,0.0,0.0,predicted,,Poor W-H linearity: isotropic uniform-deformation assumptions may fail.,5
+Scherrer,noise,0.0,536,20,20.0,0.0,0.0,0.0,0.0,,predicted,,,5
+Williamson–Hall,noise,0.0,536,20,20.0,0.0,0.0,0.0,0.0,0.0,predicted,,Poor W-H linearity: isotropic uniform-deformation assumptions may fail.,5
+Scherrer,noise,0.0,534,80,80.00000000000001,1.4210854715202004e-14,1.4210854715202004e-14,1.7763568394002506e-16,0.0,,predicted,,,5
+Williamson–Hall,noise,0.0,534,80,80.00000000000001,1.4210854715202004e-14,1.4210854715202004e-14,1.7763568394002506e-16,0.0,8.376868597570054e-20,predicted,,Poor W-H linearity: isotropic uniform-deformation assumptions may fail.,5
+Scherrer,noise,0.0,535,80,80.00000000000001,1.4210854715202004e-14,1.4210854715202004e-14,1.7763568394002506e-16,0.0,,predicted,,,5
+Williamson–Hall,noise,0.0,535,80,80.00000000000001,1.4210854715202004e-14,1.4210854715202004e-14,1.7763568394002506e-16,0.0,8.376868597570054e-20,predicted,,Poor W-H linearity: isotropic uniform-deformation assumptions may fail.,5
+Scherrer,noise,0.0,536,80,80.00000000000001,1.4210854715202004e-14,1.4210854715202004e-14,1.7763568394002506e-16,0.0,,predicted,,,5
+Williamson–Hall,noise,0.0,536,80,80.00000000000001,1.4210854715202004e-14,1.4210854715202004e-14,1.7763568394002506e-16,0.0,8.376868597570054e-20,predicted,,Poor W-H linearity: isotropic uniform-deformation assumptions may fail.,5
+Scherrer,noise,0.01,534,20,20.01527753738594,0.015277537385941287,0.015277537385941287,0.0007638768692970644,0.0,,predicted,,,5
+Williamson–Hall,noise,0.01,534,20,20.05547066468473,0.05547066468473005,0.05547066468473005,0.0027735332342365025,0.0,1.220649066767921e-05,predicted,,Poor W-H linearity: isotropic uniform-deformation assumptions may fail.,5
+Scherrer,noise,0.01,535,20,19.98220357263102,-0.017796427368981682,0.017796427368981682,0.0008898213684490841,0.0,,predicted,,,5
+Williamson–Hall,noise,0.01,535,20,,,,,0.0,,fit_failed,Negative microstrain slope is inconsistent with this model.,,5
+Scherrer,noise,0.01,536,20,19.964688490378947,-0.035311509621053006,0.035311509621053006,0.0017655754810526503,0.0,,predicted,,,5
+Williamson–Hall,noise,0.01,536,20,20.04564648027143,0.04564648027142937,0.04564648027142937,0.0022823240135714682,0.0,9.473287749910576e-06,predicted,,Poor W-H linearity: isotropic uniform-deformation assumptions may fail.,5
+Scherrer,noise,0.01,534,80,79.5140791921057,-0.4859208078943027,0.4859208078943027,0.006074010098678783,0.0,,predicted,,,5
+Williamson–Hall,noise,0.01,534,80,,,,,0.0,,fit_failed,Negative microstrain slope is inconsistent with this model.,,5
+Scherrer,noise,0.01,535,80,80.52649297448794,0.5264929744879367,0.5264929744879367,0.006581162181099209,0.0,,predicted,,,5
+Williamson–Hall,noise,0.01,535,80,80.48618411898191,0.4861841189819103,0.4861841189819103,0.006077301487273879,0.0,1.685760258391054e-06,predicted,,Poor W-H linearity: isotropic uniform-deformation assumptions may fail.,5
+Scherrer,noise,0.01,536,80,79.56240572599134,-0.43759427400866,0.43759427400866,0.0054699284251082505,0.0,,predicted,,,5
+Williamson–Hall,noise,0.01,536,80,80.3684317017588,0.36843170175879436,0.36843170175879436,0.00460539627198493,0.0,6.592161885780967e-06,predicted,,Poor W-H linearity: isotropic uniform-deformation assumptions may fail.,5
+Scherrer,noise,0.05,534,20,,,,,0.0,,fit_failed,"Poor peak fit: inspect residuals, background and profile assumptions.",,0
+Williamson–Hall,noise,0.05,534,20,,,,,0.0,,fit_failed,Fewer than three usable isolated reflections,,0
+Scherrer,noise,0.05,535,20,,,,,0.0,,fit_failed,"Poor peak fit: inspect residuals, background and profile assumptions.",,0
+Williamson–Hall,noise,0.05,535,20,,,,,0.0,,fit_failed,Fewer than three usable isolated reflections,,0
+Scherrer,noise,0.05,536,20,,,,,0.0,,fit_failed,"Poor peak fit: inspect residuals, background and profile assumptions.",,0
+Williamson–Hall,noise,0.05,536,20,,,,,0.0,,fit_failed,Fewer than three usable isolated reflections,,0
+Scherrer,noise,0.05,534,80,,,,,0.0,,fit_failed,"Poor peak fit: inspect residuals, background and profile assumptions.",,0
+Williamson–Hall,noise,0.05,534,80,,,,,0.0,,fit_failed,Fewer than three usable isolated reflections,,0
+Scherrer,noise,0.05,535,80,,,,,0.0,,fit_failed,"Poor peak fit: inspect residuals, background and profile assumptions.",,0
+Williamson–Hall,noise,0.05,535,80,,,,,0.0,,fit_failed,Fewer than three usable isolated reflections,,0
+Scherrer,noise,0.05,536,80,,,,,0.0,,fit_failed,"Poor peak fit: inspect residuals, background and profile assumptions.",,0
+Williamson–Hall,noise,0.05,536,80,,,,,0.0,,fit_failed,Fewer than three usable isolated reflections,,0
+Scherrer,instrument,0.0,534,20,20.0,0.0,0.0,0.0,0.0,,predicted,,,5
+Williamson–Hall,instrument,0.0,534,20,20.0,0.0,0.0,0.0,0.0,0.0,predicted,,,5
+Scherrer,instrument,0.0,535,20,20.0,0.0,0.0,0.0,0.0,,predicted,,,5
+Williamson–Hall,instrument,0.0,535,20,20.0,0.0,0.0,0.0,0.0,0.0,predicted,,,5
+Scherrer,instrument,0.0,536,20,20.0,0.0,0.0,0.0,0.0,,predicted,,,5
+Williamson–Hall,instrument,0.0,536,20,20.0,0.0,0.0,0.0,0.0,0.0,predicted,,,5
+Scherrer,instrument,0.0,534,80,80.0,0.0,0.0,0.0,0.0,,predicted,,,5
+Williamson–Hall,instrument,0.0,534,80,79.99999999999999,-1.4210854715202004e-14,1.4210854715202004e-14,1.7763568394002506e-16,0.0,0.0,predicted,,Poor W-H linearity: isotropic uniform-deformation assumptions may fail.,5
+Scherrer,instrument,0.0,535,80,80.0,0.0,0.0,0.0,0.0,,predicted,,,5
+Williamson–Hall,instrument,0.0,535,80,79.99999999999999,-1.4210854715202004e-14,1.4210854715202004e-14,1.7763568394002506e-16,0.0,0.0,predicted,,Poor W-H linearity: isotropic uniform-deformation assumptions may fail.,5
+Scherrer,instrument,0.0,536,80,80.0,0.0,0.0,0.0,0.0,,predicted,,,5
+Williamson–Hall,instrument,0.0,536,80,79.99999999999999,-1.4210854715202004e-14,1.4210854715202004e-14,1.7763568394002506e-16,0.0,0.0,predicted,,Poor W-H linearity: isotropic uniform-deformation assumptions may fail.,5
+Scherrer,instrument,0.04,534,20,20.0,0.0,0.0,0.0,0.0,,predicted,,,5
+Williamson–Hall,instrument,0.04,534,20,20.0,0.0,0.0,0.0,0.0,0.0,predicted,,Poor W-H linearity: isotropic uniform-deformation assumptions may fail.,5
+Scherrer,instrument,0.04,535,20,20.0,0.0,0.0,0.0,0.0,,predicted,,,5
+Williamson–Hall,instrument,0.04,535,20,20.0,0.0,0.0,0.0,0.0,0.0,predicted,,Poor W-H linearity: isotropic uniform-deformation assumptions may fail.,5
+Scherrer,instrument,0.04,536,20,20.0,0.0,0.0,0.0,0.0,,predicted,,,5
+Williamson–Hall,instrument,0.04,536,20,20.0,0.0,0.0,0.0,0.0,0.0,predicted,,Poor W-H linearity: isotropic uniform-deformation assumptions may fail.,5
+Scherrer,instrument,0.04,534,80,80.00000000000001,1.4210854715202004e-14,1.4210854715202004e-14,1.7763568394002506e-16,0.0,,predicted,,,5
+Williamson–Hall,instrument,0.04,534,80,80.00000000000001,1.4210854715202004e-14,1.4210854715202004e-14,1.7763568394002506e-16,0.0,8.376868597570054e-20,predicted,,Poor W-H linearity: isotropic uniform-deformation assumptions may fail.,5
+Scherrer,instrument,0.04,535,80,80.00000000000001,1.4210854715202004e-14,1.4210854715202004e-14,1.7763568394002506e-16,0.0,,predicted,,,5
+Williamson–Hall,instrument,0.04,535,80,80.00000000000001,1.4210854715202004e-14,1.4210854715202004e-14,1.7763568394002506e-16,0.0,8.376868597570054e-20,predicted,,Poor W-H linearity: isotropic uniform-deformation assumptions may fail.,5
+Scherrer,instrument,0.04,536,80,80.00000000000001,1.4210854715202004e-14,1.4210854715202004e-14,1.7763568394002506e-16,0.0,,predicted,,,5
+Williamson–Hall,instrument,0.04,536,80,80.00000000000001,1.4210854715202004e-14,1.4210854715202004e-14,1.7763568394002506e-16,0.0,8.376868597570054e-20,predicted,,Poor W-H linearity: isotropic uniform-deformation assumptions may fail.,5
+Scherrer,instrument,0.4,534,20,20.000000000000004,3.552713678800501e-15,3.552713678800501e-15,1.7763568394002506e-16,0.0,,predicted,,,5
+Williamson–Hall,instrument,0.4,534,20,20.000000000000004,3.552713678800501e-15,3.552713678800501e-15,1.7763568394002506e-16,0.0,3.3507474390280215e-19,predicted,,Poor W-H linearity: isotropic uniform-deformation assumptions may fail.,5
+Scherrer,instrument,0.4,535,20,20.000000000000004,3.552713678800501e-15,3.552713678800501e-15,1.7763568394002506e-16,0.0,,predicted,,,5
+Williamson–Hall,instrument,0.4,535,20,20.000000000000004,3.552713678800501e-15,3.552713678800501e-15,1.7763568394002506e-16,0.0,3.3507474390280215e-19,predicted,,Poor W-H linearity: isotropic uniform-deformation assumptions may fail.,5
+Scherrer,instrument,0.4,536,20,20.000000000000004,3.552713678800501e-15,3.552713678800501e-15,1.7763568394002506e-16,0.0,,predicted,,,5
+Williamson–Hall,instrument,0.4,536,20,20.000000000000004,3.552713678800501e-15,3.552713678800501e-15,1.7763568394002506e-16,0.0,3.3507474390280215e-19,predicted,,Poor W-H linearity: isotropic uniform-deformation assumptions may fail.,5
+Scherrer,instrument,0.4,534,80,80.00000000000003,2.842170943040401e-14,2.842170943040401e-14,3.552713678800501e-16,0.0,,predicted,,,5
+Williamson–Hall,instrument,0.4,534,80,80.00000000000003,2.842170943040401e-14,2.842170943040401e-14,3.552713678800501e-16,0.0,1.3533818142609394e-19,predicted,,Poor W-H linearity: isotropic uniform-deformation assumptions may fail.,5
+Scherrer,instrument,0.4,535,80,80.00000000000003,2.842170943040401e-14,2.842170943040401e-14,3.552713678800501e-16,0.0,,predicted,,,5
+Williamson–Hall,instrument,0.4,535,80,80.00000000000003,2.842170943040401e-14,2.842170943040401e-14,3.552713678800501e-16,0.0,1.3533818142609394e-19,predicted,,Poor W-H linearity: isotropic uniform-deformation assumptions may fail.,5
+Scherrer,instrument,0.4,536,80,80.00000000000003,2.842170943040401e-14,2.842170943040401e-14,3.552713678800501e-16,0.0,,predicted,,,5
+Williamson–Hall,instrument,0.4,536,80,80.00000000000003,2.842170943040401e-14,2.842170943040401e-14,3.552713678800501e-16,0.0,1.3533818142609394e-19,predicted,,Poor W-H linearity: isotropic uniform-deformation assumptions may fail.,5
+Scherrer,strain,0.0,534,20,20.0,0.0,0.0,0.0,0.0,,predicted,,,5
+Williamson–Hall,strain,0.0,534,20,20.0,0.0,0.0,0.0,0.0,0.0,predicted,,Poor W-H linearity: isotropic uniform-deformation assumptions may fail.,5
+Scherrer,strain,0.0,535,20,20.0,0.0,0.0,0.0,0.0,,predicted,,,5
+Williamson–Hall,strain,0.0,535,20,20.0,0.0,0.0,0.0,0.0,0.0,predicted,,Poor W-H linearity: isotropic uniform-deformation assumptions may fail.,5
+Scherrer,strain,0.0,536,20,20.0,0.0,0.0,0.0,0.0,,predicted,,,5
+Williamson–Hall,strain,0.0,536,20,20.0,0.0,0.0,0.0,0.0,0.0,predicted,,Poor W-H linearity: isotropic uniform-deformation assumptions may fail.,5
+Scherrer,strain,0.0,534,80,80.00000000000001,1.4210854715202004e-14,1.4210854715202004e-14,1.7763568394002506e-16,0.0,,predicted,,,5
+Williamson–Hall,strain,0.0,534,80,80.00000000000001,1.4210854715202004e-14,1.4210854715202004e-14,1.7763568394002506e-16,0.0,8.376868597570054e-20,predicted,,Poor W-H linearity: isotropic uniform-deformation assumptions may fail.,5
+Scherrer,strain,0.0,535,80,80.00000000000001,1.4210854715202004e-14,1.4210854715202004e-14,1.7763568394002506e-16,0.0,,predicted,,,5
+Williamson–Hall,strain,0.0,535,80,80.00000000000001,1.4210854715202004e-14,1.4210854715202004e-14,1.7763568394002506e-16,0.0,8.376868597570054e-20,predicted,,Poor W-H linearity: isotropic uniform-deformation assumptions may fail.,5
+Scherrer,strain,0.0,536,80,80.00000000000001,1.4210854715202004e-14,1.4210854715202004e-14,1.7763568394002506e-16,0.0,,predicted,,,5
+Williamson–Hall,strain,0.0,536,80,80.00000000000001,1.4210854715202004e-14,1.4210854715202004e-14,1.7763568394002506e-16,0.0,8.376868597570054e-20,predicted,,Poor W-H linearity: isotropic uniform-deformation assumptions may fail.,5
+Scherrer,strain,0.0005,534,20,,,,,0.0005,,input_rejected,Nonzero simulated microstrain invalidates size-only inference,,5
+Williamson–Hall,strain,0.0005,534,20,20.000000000000004,3.552713678800501e-15,3.552713678800501e-15,1.7763568394002506e-16,0.0005,0.0005000000000000009,predicted,,,5
+Scherrer,strain,0.0005,535,20,,,,,0.0005,,input_rejected,Nonzero simulated microstrain invalidates size-only inference,,5
+Williamson–Hall,strain,0.0005,535,20,20.000000000000004,3.552713678800501e-15,3.552713678800501e-15,1.7763568394002506e-16,0.0005,0.0005000000000000009,predicted,,,5
+Scherrer,strain,0.0005,536,20,,,,,0.0005,,input_rejected,Nonzero simulated microstrain invalidates size-only inference,,5
+Williamson–Hall,strain,0.0005,536,20,20.000000000000004,3.552713678800501e-15,3.552713678800501e-15,1.7763568394002506e-16,0.0005,0.0005000000000000009,predicted,,,5
+Scherrer,strain,0.0005,534,80,,,,,0.0005,,input_rejected,Nonzero simulated microstrain invalidates size-only inference,,5
+Williamson–Hall,strain,0.0005,534,80,79.99999999999994,-5.684341886080802e-14,5.684341886080802e-14,7.105427357601002e-16,0.0005,0.0004999999999999997,predicted,,,5
+Scherrer,strain,0.0005,535,80,,,,,0.0005,,input_rejected,Nonzero simulated microstrain invalidates size-only inference,,5
+Williamson–Hall,strain,0.0005,535,80,79.99999999999994,-5.684341886080802e-14,5.684341886080802e-14,7.105427357601002e-16,0.0005,0.0004999999999999997,predicted,,,5
+Scherrer,strain,0.0005,536,80,,,,,0.0005,,input_rejected,Nonzero simulated microstrain invalidates size-only inference,,5
+Williamson–Hall,strain,0.0005,536,80,79.99999999999994,-5.684341886080802e-14,5.684341886080802e-14,7.105427357601002e-16,0.0005,0.0004999999999999997,predicted,,,5
+Scherrer,strain,0.002,534,20,,,,,0.002,,input_rejected,Nonzero simulated microstrain invalidates size-only inference,,5
+Williamson–Hall,strain,0.002,534,20,20.0,0.0,0.0,0.0,0.002,0.0019999999999999996,predicted,,,5
+Scherrer,strain,0.002,535,20,,,,,0.002,,input_rejected,Nonzero simulated microstrain invalidates size-only inference,,5
+Williamson–Hall,strain,0.002,535,20,20.0,0.0,0.0,0.0,0.002,0.0019999999999999996,predicted,,,5
+Scherrer,strain,0.002,536,20,,,,,0.002,,input_rejected,Nonzero simulated microstrain invalidates size-only inference,,5
+Williamson–Hall,strain,0.002,536,20,20.0,0.0,0.0,0.0,0.002,0.0019999999999999996,predicted,,,5
+Scherrer,strain,0.002,534,80,,,,,0.002,,input_rejected,Nonzero simulated microstrain invalidates size-only inference,,5
+Williamson–Hall,strain,0.002,534,80,79.99999999999996,-4.263256414560601e-14,4.263256414560601e-14,5.329070518200751e-16,0.002,0.0019999999999999996,predicted,,,5
+Scherrer,strain,0.002,535,80,,,,,0.002,,input_rejected,Nonzero simulated microstrain invalidates size-only inference,,5
+Williamson–Hall,strain,0.002,535,80,79.99999999999996,-4.263256414560601e-14,4.263256414560601e-14,5.329070518200751e-16,0.002,0.0019999999999999996,predicted,,,5
+Scherrer,strain,0.002,536,80,,,,,0.002,,input_rejected,Nonzero simulated microstrain invalidates size-only inference,,5
+Williamson–Hall,strain,0.002,536,80,79.99999999999996,-4.263256414560601e-14,4.263256414560601e-14,5.329070518200751e-16,0.002,0.0019999999999999996,predicted,,,5
+Scherrer,step,0.004,534,20,20.0,0.0,0.0,0.0,0.0,,predicted,,,5
+Williamson–Hall,step,0.004,534,20,20.0,0.0,0.0,0.0,0.0,0.0,predicted,,Poor W-H linearity: isotropic uniform-deformation assumptions may fail.,5
+Scherrer,step,0.004,535,20,20.0,0.0,0.0,0.0,0.0,,predicted,,,5
+Williamson–Hall,step,0.004,535,20,20.0,0.0,0.0,0.0,0.0,0.0,predicted,,Poor W-H linearity: isotropic uniform-deformation assumptions may fail.,5
+Scherrer,step,0.004,536,20,20.0,0.0,0.0,0.0,0.0,,predicted,,,5
+Williamson–Hall,step,0.004,536,20,20.0,0.0,0.0,0.0,0.0,0.0,predicted,,Poor W-H linearity: isotropic uniform-deformation assumptions may fail.,5
+Scherrer,step,0.004,534,80,80.00000000000001,1.4210854715202004e-14,1.4210854715202004e-14,1.7763568394002506e-16,0.0,,predicted,,,5
+Williamson–Hall,step,0.004,534,80,80.00000000000001,1.4210854715202004e-14,1.4210854715202004e-14,1.7763568394002506e-16,0.0,8.376868597570054e-20,predicted,,Poor W-H linearity: isotropic uniform-deformation assumptions may fail.,5
+Scherrer,step,0.004,535,80,80.00000000000001,1.4210854715202004e-14,1.4210854715202004e-14,1.7763568394002506e-16,0.0,,predicted,,,5
+Williamson–Hall,step,0.004,535,80,80.00000000000001,1.4210854715202004e-14,1.4210854715202004e-14,1.7763568394002506e-16,0.0,8.376868597570054e-20,predicted,,Poor W-H linearity: isotropic uniform-deformation assumptions may fail.,5
+Scherrer,step,0.004,536,80,80.00000000000001,1.4210854715202004e-14,1.4210854715202004e-14,1.7763568394002506e-16,0.0,,predicted,,,5
+Williamson–Hall,step,0.004,536,80,80.00000000000001,1.4210854715202004e-14,1.4210854715202004e-14,1.7763568394002506e-16,0.0,8.376868597570054e-20,predicted,,Poor W-H linearity: isotropic uniform-deformation assumptions may fail.,5
+Scherrer,step,0.02,534,20,20.000000000000004,3.552713678800501e-15,3.552713678800501e-15,1.7763568394002506e-16,0.0,,predicted,,,5
+Williamson–Hall,step,0.02,534,20,20.000000000000004,3.552713678800501e-15,3.552713678800501e-15,1.7763568394002506e-16,0.0,5.0495871689355e-19,predicted,,Poor W-H linearity: isotropic uniform-deformation assumptions may fail.,5
+Scherrer,step,0.02,535,20,20.000000000000004,3.552713678800501e-15,3.552713678800501e-15,1.7763568394002506e-16,0.0,,predicted,,,5
+Williamson–Hall,step,0.02,535,20,20.000000000000004,3.552713678800501e-15,3.552713678800501e-15,1.7763568394002506e-16,0.0,5.0495871689355e-19,predicted,,Poor W-H linearity: isotropic uniform-deformation assumptions may fail.,5
+Scherrer,step,0.02,536,20,20.000000000000004,3.552713678800501e-15,3.552713678800501e-15,1.7763568394002506e-16,0.0,,predicted,,,5
+Williamson–Hall,step,0.02,536,20,20.000000000000004,3.552713678800501e-15,3.552713678800501e-15,1.7763568394002506e-16,0.0,5.0495871689355e-19,predicted,,Poor W-H linearity: isotropic uniform-deformation assumptions may fail.,5
+Scherrer,step,0.02,534,80,80.00000000000001,1.4210854715202004e-14,1.4210854715202004e-14,1.7763568394002506e-16,0.0,,predicted,,,5
+Williamson–Hall,step,0.02,534,80,80.00000000000001,1.4210854715202004e-14,1.4210854715202004e-14,1.7763568394002506e-16,0.0,1.6871067247107446e-19,predicted,,Poor W-H linearity: isotropic uniform-deformation assumptions may fail.,5
+Scherrer,step,0.02,535,80,80.00000000000001,1.4210854715202004e-14,1.4210854715202004e-14,1.7763568394002506e-16,0.0,,predicted,,,5
+Williamson–Hall,step,0.02,535,80,80.00000000000001,1.4210854715202004e-14,1.4210854715202004e-14,1.7763568394002506e-16,0.0,1.6871067247107446e-19,predicted,,Poor W-H linearity: isotropic uniform-deformation assumptions may fail.,5
+Scherrer,step,0.02,536,80,80.00000000000001,1.4210854715202004e-14,1.4210854715202004e-14,1.7763568394002506e-16,0.0,,predicted,,,5
+Williamson–Hall,step,0.02,536,80,80.00000000000001,1.4210854715202004e-14,1.4210854715202004e-14,1.7763568394002506e-16,0.0,1.6871067247107446e-19,predicted,,Poor W-H linearity: isotropic uniform-deformation assumptions may fail.,5
+Scherrer,step,0.08,534,20,19.999999999999968,-3.197442310920451e-14,3.197442310920451e-14,1.5987211554602255e-15,0.0,,predicted,,,5
+Williamson–Hall,step,0.08,534,20,19.999999999999968,-3.197442310920451e-14,3.197442310920451e-14,1.5987211554602255e-15,0.0,0.0,predicted,,Poor W-H linearity: isotropic uniform-deformation assumptions may fail.,5
+Scherrer,step,0.08,535,20,19.999999999999968,-3.197442310920451e-14,3.197442310920451e-14,1.5987211554602255e-15,0.0,,predicted,,,5
+Williamson–Hall,step,0.08,535,20,19.999999999999968,-3.197442310920451e-14,3.197442310920451e-14,1.5987211554602255e-15,0.0,0.0,predicted,,Poor W-H linearity: isotropic uniform-deformation assumptions may fail.,5
+Scherrer,step,0.08,536,20,19.999999999999968,-3.197442310920451e-14,3.197442310920451e-14,1.5987211554602255e-15,0.0,,predicted,,,5
+Williamson–Hall,step,0.08,536,20,19.999999999999968,-3.197442310920451e-14,3.197442310920451e-14,1.5987211554602255e-15,0.0,0.0,predicted,,Poor W-H linearity: isotropic uniform-deformation assumptions may fail.,5
+Scherrer,step,0.08,534,80,,,,,0.0,,fit_failed,Under-resolved peak: fewer than five median sample steps per FWHM.,,0
+Williamson–Hall,step,0.08,534,80,,,,,0.0,,fit_failed,Fewer than three usable isolated reflections,,0
+Scherrer,step,0.08,535,80,,,,,0.0,,fit_failed,Under-resolved peak: fewer than five median sample steps per FWHM.,,0
+Williamson–Hall,step,0.08,535,80,,,,,0.0,,fit_failed,Fewer than three usable isolated reflections,,0
+Scherrer,step,0.08,536,80,,,,,0.0,,fit_failed,Under-resolved peak: fewer than five median sample steps per FWHM.,,0
+Williamson–Hall,step,0.08,536,80,,,,,0.0,,fit_failed,Fewer than three usable isolated reflections,,0
+Scherrer,overlap,0.0,534,20,20.0,0.0,0.0,0.0,0.0,,predicted,,,5
+Williamson–Hall,overlap,0.0,534,20,20.0,0.0,0.0,0.0,0.0,0.0,predicted,,Poor W-H linearity: isotropic uniform-deformation assumptions may fail.,5
+Scherrer,overlap,0.0,535,20,20.0,0.0,0.0,0.0,0.0,,predicted,,,5
+Williamson–Hall,overlap,0.0,535,20,20.0,0.0,0.0,0.0,0.0,0.0,predicted,,Poor W-H linearity: isotropic uniform-deformation assumptions may fail.,5
+Scherrer,overlap,0.0,536,20,20.0,0.0,0.0,0.0,0.0,,predicted,,,5
+Williamson–Hall,overlap,0.0,536,20,20.0,0.0,0.0,0.0,0.0,0.0,predicted,,Poor W-H linearity: isotropic uniform-deformation assumptions may fail.,5
+Scherrer,overlap,0.0,534,80,80.00000000000001,1.4210854715202004e-14,1.4210854715202004e-14,1.7763568394002506e-16,0.0,,predicted,,,5
+Williamson–Hall,overlap,0.0,534,80,80.00000000000001,1.4210854715202004e-14,1.4210854715202004e-14,1.7763568394002506e-16,0.0,8.376868597570054e-20,predicted,,Poor W-H linearity: isotropic uniform-deformation assumptions may fail.,5
+Scherrer,overlap,0.0,535,80,80.00000000000001,1.4210854715202004e-14,1.4210854715202004e-14,1.7763568394002506e-16,0.0,,predicted,,,5
+Williamson–Hall,overlap,0.0,535,80,80.00000000000001,1.4210854715202004e-14,1.4210854715202004e-14,1.7763568394002506e-16,0.0,8.376868597570054e-20,predicted,,Poor W-H linearity: isotropic uniform-deformation assumptions may fail.,5
+Scherrer,overlap,0.0,536,80,80.00000000000001,1.4210854715202004e-14,1.4210854715202004e-14,1.7763568394002506e-16,0.0,,predicted,,,5
+Williamson–Hall,overlap,0.0,536,80,80.00000000000001,1.4210854715202004e-14,1.4210854715202004e-14,1.7763568394002506e-16,0.0,8.376868597570054e-20,predicted,,Poor W-H linearity: isotropic uniform-deformation assumptions may fail.,5
+Scherrer,overlap,0.5,534,20,,,,,0.0,,input_rejected,Known second reflection inside target window,,4
+Williamson–Hall,overlap,0.5,534,20,19.999999999999996,-3.552713678800501e-15,3.552713678800501e-15,1.7763568394002506e-16,0.0,0.0,predicted,,Poor W-H linearity: isotropic uniform-deformation assumptions may fail.,4
+Scherrer,overlap,0.5,535,20,,,,,0.0,,input_rejected,Known second reflection inside target window,,4
+Williamson–Hall,overlap,0.5,535,20,19.999999999999996,-3.552713678800501e-15,3.552713678800501e-15,1.7763568394002506e-16,0.0,0.0,predicted,,Poor W-H linearity: isotropic uniform-deformation assumptions may fail.,4
+Scherrer,overlap,0.5,536,20,,,,,0.0,,input_rejected,Known second reflection inside target window,,4
+Williamson–Hall,overlap,0.5,536,20,19.999999999999996,-3.552713678800501e-15,3.552713678800501e-15,1.7763568394002506e-16,0.0,0.0,predicted,,Poor W-H linearity: isotropic uniform-deformation assumptions may fail.,4
+Scherrer,overlap,0.5,534,80,,,,,0.0,,input_rejected,Known second reflection inside target window,,4
+Williamson–Hall,overlap,0.5,534,80,80.0,0.0,0.0,0.0,0.0,0.0,predicted,,,4
+Scherrer,overlap,0.5,535,80,,,,,0.0,,input_rejected,Known second reflection inside target window,,4
+Williamson–Hall,overlap,0.5,535,80,80.0,0.0,0.0,0.0,0.0,0.0,predicted,,,4
+Scherrer,overlap,0.5,536,80,,,,,0.0,,input_rejected,Known second reflection inside target window,,4
+Williamson–Hall,overlap,0.5,536,80,80.0,0.0,0.0,0.0,0.0,0.0,predicted,,,4
+Scherrer,overlap,1.0,534,20,,,,,0.0,,input_rejected,Known second reflection inside target window,,4
+Williamson–Hall,overlap,1.0,534,20,19.999999999999996,-3.552713678800501e-15,3.552713678800501e-15,1.7763568394002506e-16,0.0,0.0,predicted,,Poor W-H linearity: isotropic uniform-deformation assumptions may fail.,4
+Scherrer,overlap,1.0,535,20,,,,,0.0,,input_rejected,Known second reflection inside target window,,4
+Williamson–Hall,overlap,1.0,535,20,19.999999999999996,-3.552713678800501e-15,3.552713678800501e-15,1.7763568394002506e-16,0.0,0.0,predicted,,Poor W-H linearity: isotropic uniform-deformation assumptions may fail.,4
+Scherrer,overlap,1.0,536,20,,,,,0.0,,input_rejected,Known second reflection inside target window,,4
+Williamson–Hall,overlap,1.0,536,20,19.999999999999996,-3.552713678800501e-15,3.552713678800501e-15,1.7763568394002506e-16,0.0,0.0,predicted,,Poor W-H linearity: isotropic uniform-deformation assumptions may fail.,4
+Scherrer,overlap,1.0,534,80,,,,,0.0,,input_rejected,Known second reflection inside target window,,4
+Williamson–Hall,overlap,1.0,534,80,80.0,0.0,0.0,0.0,0.0,0.0,predicted,,,4
+Scherrer,overlap,1.0,535,80,,,,,0.0,,input_rejected,Known second reflection inside target window,,4
+Williamson–Hall,overlap,1.0,535,80,80.0,0.0,0.0,0.0,0.0,0.0,predicted,,,4
+Scherrer,overlap,1.0,536,80,,,,,0.0,,input_rejected,Known second reflection inside target window,,4
+Williamson–Hall,overlap,1.0,536,80,80.0,0.0,0.0,0.0,0.0,0.0,predicted,,,4

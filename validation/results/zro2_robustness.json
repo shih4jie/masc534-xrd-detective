@@ -1,0 +1,65 @@
+{
+  "scope": "Synthetic ZrO2 held-out sensitivity with a fixed checkpoint",
+  "checkpoint_sha256": "88262b9aceb41f6633e546fe24969253b493cddda6aeea9aa02a1e567468a89b",
+  "test_sha256": "9e5a5c552180fb9844c4b237f80efde45b8d14df4bce0ab4cb92c599e70a2ee4",
+  "random_seed": 1534,
+  "tensorflow": "2.20.0",
+  "numpy": "2.5.5",
+  "summary": [
+    {
+      "factor": "baseline",
+      "level": 0.0,
+      "attempts": 240,
+      "accepted": 240,
+      "mae_nm": 1.5136908917785845,
+      "rmse_nm": 2.309667624815273,
+      "bias_nm": 0.4495188621041221,
+      "input_rejection_rate": 0.0,
+      "failure_rate": 0.0
+    },
+    {
+      "factor": "log_noise",
+      "level": 0.05,
+      "attempts": 240,
+      "accepted": 240,
+      "mae_nm": 1.5877249153200523,
+      "rmse_nm": 2.3838408784235408,
+      "bias_nm": 0.4934269966266084,
+      "input_rejection_rate": 0.0,
+      "failure_rate": 0.0
+    },
+    {
+      "factor": "log_noise",
+      "level": 0.15,
+      "attempts": 240,
+      "accepted": 240,
+      "mae_nm": 3.9753331286865654,
+      "rmse_nm": 5.106742407417888,
+      "bias_nm": 1.1479825405024509,
+      "input_rejection_rate": 0.0,
+      "failure_rate": 0.0
+    },
+    {
+      "factor": "sampling_step_deg",
+      "level": 0.02,
+      "attempts": 240,
+      "accepted": 240,
+      "mae_nm": 1.3189506665572772,
+      "rmse_nm": 2.036039311018063,
+      "bias_nm": -0.80849983807385,
+      "input_rejection_rate": 0.0,
+      "failure_rate": 0.0
+    },
+    {
+      "factor": "sampling_step_deg",
+      "level": 0.05,
+      "attempts": 240,
+      "accepted": 240,
+      "mae_nm": 5.84414917791046,
+      "rmse_nm": 7.4364789376220015,
+      "bias_nm": -5.809271870091277,
+      "input_rejection_rate": 0.0,
+      "failure_rate": 0.0
+    }
+  ]
+}

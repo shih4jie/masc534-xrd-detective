@@ -1,0 +1,69 @@
+{
+  "source": "Independent scalar equations in validation/multi_peak_workflows.py",
+  "data_kind": "synthetic",
+  "material": null,
+  "note": "Six analytical independent reflections share a declared isotropic size/strain law; not a real identified phase.",
+  "size_nm": 80.0,
+  "wavelength_nm": 0.15406,
+  "K": 0.9,
+  "centers_deg": [
+    25.0,
+    35.0,
+    47.0,
+    61.0,
+    77.0,
+    95.0
+  ],
+  "instrument_fwhm_deg": 0.07,
+  "step_deg": 0.005,
+  "noise": "none; Lorentzian cross-peak tails remain",
+  "experimental": false,
+  "profile": "Lorentzian",
+  "microstrain": 0.0004,
+  "known_size_nm": 80.0,
+  "wavelength_angstrom": 1.5406,
+  "shape_factor": 0.9,
+  "geometry": "Synthetic powder-like 2theta axis; no instrument acquisition",
+  "point_count": 16001,
+  "fit_window_half_width_deg": 1.2,
+  "sha256": "c52694ce91b74b792ec9b2367c6bd4a0b03b3903fb774f3e1213ff2c222bae7a",
+  "oracle": [
+    {
+      "center_deg": 25.0,
+      "sample_fwhm_deg": 0.12203812575861607,
+      "observed_fwhm_deg": 0.19203812575861606,
+      "apparent_scherrer_nm": 66.67729810519978
+    },
+    {
+      "center_deg": 35.0,
+      "sample_fwhm_deg": 0.13302719392454446,
+      "observed_fwhm_deg": 0.20302719392454446,
+      "apparent_scherrer_nm": 62.61741048961249
+    },
+    {
+      "center_deg": 47.0,
+      "sample_fwhm_deg": 0.14814540336779786,
+      "observed_fwhm_deg": 0.21814540336779786,
+      "apparent_scherrer_nm": 58.47484353163341
+    },
+    {
+      "center_deg": 61.0,
+      "sample_fwhm_deg": 0.16925065814237475,
+      "observed_fwhm_deg": 0.23925065814237476,
+      "apparent_scherrer_nm": 54.475883281160854
+    },
+    {
+      "center_deg": 77.0,
+      "sample_fwhm_deg": 0.1998082303021592,
+      "observed_fwhm_deg": 0.26980823030215917,
+      "apparent_scherrer_nm": 50.80392801564779
+    },
+    {
+      "center_deg": 95.0,
+      "sample_fwhm_deg": 0.24703173365164463,
+      "observed_fwhm_deg": 0.3170317336516446,
+      "apparent_scherrer_nm": 47.601314200739594
+    }
+  ],
+  "instrument_reference": "Analytical synthetic fixture: exactly known pure-profile instrument width; not experimental calibration"
+}

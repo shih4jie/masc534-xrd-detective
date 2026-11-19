@@ -1,0 +1,43 @@
+{
+  "data_kind": "experimental",
+  "dataset_doi": "10.18434/M32269",
+  "authors": "Mendenhall, Marcus H.; Cline, James P.; Black, David R. (2020), NIST",
+  "download_url": "https://data.nist.gov/od/ds/mds2-2269/srm_1979_cifs_20201110a.zip",
+  "license_url": "https://www.nist.gov/open/license",
+  "archive_sha256": "1642638f56c36d7fd77929762638b794f3d3684e9bdc69301fc09496881d9544",
+  "cif_member": "5866_15_nm_022.cif",
+  "cif_sha256": "f8d5bea980a8f0b8d3bf0bc6a3b1617eb4d88d50980b81f7bf731f797d1d6f4b",
+  "csv_sha256": "be2a29afa3d5438d26ddeb7b9366ec59997fb74b952901315c8046396c9a65c3",
+  "point_count": 45504,
+  "source_block": "data_data_pd_proc_str_wppm_11bmb_5866_corrected_angles_meas",
+  "not_used": "Topas calculated intensity block is not experimental data and was not exported.",
+  "material": "ZnO SRM1979, nominal 15 nm component, run5866 bottle22",
+  "wavelength_angstrom": 0.41419,
+  "wavelength_nm": 0.041419,
+  "wavelength_provenance": "Released CIF refined value; paper section4.3 gives earlier 0.414217 angstrom. Do not combine versions.",
+  "geometry": "Powder capillary scan (analyzer detector)",
+  "instrument": "APS 11-BM",
+  "geometry_provenance": "Certification paper section4.3 and CIF 11BM analyzer-system citation; not inferred from wavelength.",
+  "specimen": "0.8 mm Kapton capillary, spun >90 Hz (certification paper section4.3)",
+  "temperature_K": 295,
+  "angle_range_deg": [
+    1.999,
+    47.4879
+  ],
+  "axis_note": "Released 4-decimal corrected coordinates; preserve their nonuniform rounding. No interpolation.",
+  "processing": "Select corrected measured block; retain every angle/intensity, omit weights from two-column export. Local existing fitter is unweighted.",
+  "calibration": "Angle calibration already applied by NIST; no numerical IPF/local pure-profile instrument width supplied in this archive. Calculated sample pattern is not an IPF.",
+  "size_dominated_established": false,
+  "instrument_fwhm_deg": null,
+  "fit_window_deg": [
+    8.85,
+    9.4
+  ],
+  "reflection": "ZnO 002 (c-axis); assignment checked against released cell c=5.20875 angstrom",
+  "shape_factor": 0.9,
+  "ground_truth_for_scherrer_nm": null,
+  "reference_note": "15 nm is a nominal component label, not a Scherrer ground truth. Certified Fourier mean column lengths are different measurands.",
+  "source_paper": "https://doi.org/10.6028/jres.125.020",
+  "export_date_utc": "2026-11-17",
+  "user_measurement": false
+}

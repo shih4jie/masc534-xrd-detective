@@ -1,0 +1,15 @@
+{
+  "source": "Synthetic teaching model; not experimental data",
+  "generator": "python -m examples.generate",
+  "size_nm": 40,
+  "microstrain": 0,
+  "instrument_fwhm_deg": 0.1,
+  "profile": "Gaussian",
+  "two_theta_center_deg": 40,
+  "wavelength_nm": 0.15406,
+  "shape_factor": 0.9,
+  "noise_sigma_over_peak_amplitude": 0.005,
+  "seed": 534,
+  "expected_size_fwhm_deg": 0.21135339463352226,
+  "expected_observed_fwhm_deg": 0.23381671758690267
+}

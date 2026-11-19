@@ -1,0 +1,22 @@
+{
+  "source": "Synthetic Gaussian isolated peaks, zero strain; validation/sensitivity_study.py",
+  "trials": 135,
+  "conditions": 27,
+  "seeds": [
+    534,
+    535,
+    536,
+    537,
+    538
+  ],
+  "fit_failures": 45,
+  "failure_rate": 0.3333333333333333,
+  "mean_relative_error_successful": 0.0023908359750828287,
+  "maximum_relative_error_successful": 0.04849362195796876,
+  "wavelength_nm": 0.15406,
+  "center_deg": 40.0,
+  "shape_factor": 0.9,
+  "instrument_calibration": "exact known synthetic width",
+  "noise": "independent additive Gaussian, sigma=noise_fraction * peak amplitude",
+  "ml_benchmark": "not performed; no compatible validated checkpoint/test pair"
+}

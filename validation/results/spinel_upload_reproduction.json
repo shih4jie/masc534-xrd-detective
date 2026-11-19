@@ -1,0 +1,23 @@
+{
+  "source": "Original LPA-NN Spinel/data.npz row 0; notebook plotting grid",
+  "purpose": "CSV parser + trained-checkpoint runtime equivalence; not held-out accuracy validation",
+  "source_sample_count": 126,
+  "csv_sample_count": 1,
+  "points_per_pattern": 10501,
+  "original_archive_keys": [
+    "exp_data"
+  ],
+  "asset_sha256": {
+    "CNN.hdf5": "6efd1ed8a8e28861195c0b59de1c3986db60f808055049762682b6ddcad93edc",
+    "normL.class": "2295185620e3ccbb977636af23c2fdaad8f2769f3139e7b4f8bf5c7a7bb7bb62",
+    "data.npz": "80684b441b253fd80b7c115c8213e7084eb6c7575d3d41a7c32094e715d15d26"
+  },
+  "float32_tensor_equal": true,
+  "max_abs_normalized_output_difference": 0.0,
+  "public_prediction_withheld": true,
+  "public_status": "Insufficient information",
+  "compatible_held_out_labeled_sample_count": 0,
+  "mae_nm": null,
+  "rmse_nm": null,
+  "prediction_vs_ground_truth": "Unavailable: no compatible labels; no scatter plot fabricated"
+}

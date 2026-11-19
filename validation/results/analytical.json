@@ -1,0 +1,57 @@
+{
+  "source": "Synthetic independent analytical expressions; validation/analytical_tests.py",
+  "results": [
+    {
+      "profile": "Gaussian",
+      "true_size_nm": 40.0,
+      "center_deg": 40.0,
+      "wavelength_nm": 0.15406,
+      "shape_factor": 0.9,
+      "instrument_fwhm_deg": 0.0,
+      "expected_size_fwhm_deg": 0.21135339463352226,
+      "expected_observed_fwhm_deg": 0.21135339463352226,
+      "fitted_fwhm_deg": 0.21135339463352226,
+      "recovered_size_nm": 40.0,
+      "relative_error": 0.0
+    },
+    {
+      "profile": "Gaussian",
+      "true_size_nm": 40.0,
+      "center_deg": 40.0,
+      "wavelength_nm": 0.15406,
+      "shape_factor": 0.9,
+      "instrument_fwhm_deg": 0.1,
+      "expected_size_fwhm_deg": 0.21135339463352226,
+      "expected_observed_fwhm_deg": 0.23381671758690267,
+      "fitted_fwhm_deg": 0.23381671758690267,
+      "recovered_size_nm": 40.0,
+      "relative_error": 0.0
+    },
+    {
+      "profile": "Lorentzian",
+      "true_size_nm": 40.0,
+      "center_deg": 40.0,
+      "wavelength_nm": 0.15406,
+      "shape_factor": 0.9,
+      "instrument_fwhm_deg": 0.0,
+      "expected_size_fwhm_deg": 0.21135339463352226,
+      "expected_observed_fwhm_deg": 0.21135339463352226,
+      "fitted_fwhm_deg": 0.21135339463352226,
+      "recovered_size_nm": 40.0,
+      "relative_error": 0.0
+    },
+    {
+      "profile": "Lorentzian",
+      "true_size_nm": 40.0,
+      "center_deg": 40.0,
+      "wavelength_nm": 0.15406,
+      "shape_factor": 0.9,
+      "instrument_fwhm_deg": 0.1,
+      "expected_size_fwhm_deg": 0.21135339463352226,
+      "expected_observed_fwhm_deg": 0.3113533946335223,
+      "fitted_fwhm_deg": 0.3113533946335223,
+      "recovered_size_nm": 39.99999999999999,
+      "relative_error": 1.7763568394002506e-16
+    }
+  ]
+}

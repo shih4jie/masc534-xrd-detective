@@ -1,0 +1,18 @@
+{
+  "model_identifier": "LPA-NN/Spinel@87f54292:6efd1ed8a8e2",
+  "checkpoint_sha256": "6efd1ed8a8e28861195c0b59de1c3986db60f808055049762682b6ddcad93edc",
+  "status": "blocked: compatible labeled held-out set not publicly supplied",
+  "sample_count": 0,
+  "target_units": "nm",
+  "mae_nm": null,
+  "rmse_nm": null,
+  "prediction_vs_ground_truth": null,
+  "experimental_examples_without_labels": 126,
+  "public_dataset": "doi:10.57745/SVQART V1: Size/Size_strain datasets used for monoclinic ZrO2 notebooks; not a matched Spinel test set",
+  "remaining_blockers": [
+    "No held-out dataset with known size labels matched to this Spinel checkpoint is publicly supplied; MAE/RMSE are unavailable.",
+    "Exact checkpoint-linked instrument U,V,W,X,Y,Z coefficients, integration settings and intensity-scale envelope are unavailable.",
+    "The exact 2theta training grid is not certified: the released notebook defines its grid for plotting only.",
+    "The published five-output Spinel network is not the released two-output checkpoint; published accuracy cannot certify this asset."
+  ]
+}

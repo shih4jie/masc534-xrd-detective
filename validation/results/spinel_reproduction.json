@@ -1,0 +1,35 @@
+{
+  "source": "Original LPA-NN Spinel/03_Spinel.ipynb and bundled data.npz",
+  "purpose": "Numerical inference reproduction; not independent accuracy validation",
+  "sample_count": 126,
+  "input_shape": [
+    null,
+    10501,
+    1,
+    1
+  ],
+  "output_shape": [
+    null,
+    2
+  ],
+  "tensorflow": "2.20.0",
+  "numpy": "2.5.5",
+  "asset_sha256": {
+    "CNN.hdf5": "6efd1ed8a8e28861195c0b59de1c3986db60f808055049762682b6ddcad93edc",
+    "normL.class": "2295185620e3ccbb977636af23c2fdaad8f2769f3139e7b4f8bf5c7a7bb7bb62",
+    "data.npz": "80684b441b253fd80b7c115c8213e7084eb6c7575d3d41a7c32094e715d15d26"
+  },
+  "label_minimum": [
+    0.005000218943448111,
+    500.0103388021799
+  ],
+  "label_maximum": [
+    0.4999994246784009,
+    19999.985880403925
+  ],
+  "repeat_max_abs_difference_normalized": 0.0,
+  "independent_ground_truth": false,
+  "mae_nm": null,
+  "rmse_nm": null,
+  "uploaded_data_inference_enabled": false
+}

@@ -1,0 +1,31 @@
+XRD Size–Strain Detective · GSAS-II comparison preview
+
+Open the unzipped XRD_Streamlit_GSASII folder. Its root contains app.py.
+On a Mac, if Finder displays cloud icons, choose Download Now first.
+In Terminal, type "cd " (with a space), drag the folder into Terminal,
+and press Return. Then run these commands using Python 3.12:
+
+    python3.12 -m venv .venv
+    source .venv/bin/activate
+    python -m pip install -r requirements.txt
+    python -m streamlit run app.py
+
+Open http://localhost:8501 in your browser. Keep Terminal running.
+
+To try the measured comparison, expand "Try a measured pattern with both
+methods", download massonbr.xy and drag it into the upload area. Load it
+with degrees selected. Confirm wavelength 0.39982 angstrom, the powder
+capillary scan with an analyzer detector, and the two assumptions. Then
+choose "Compare Physics and GSAS-II". See the method guide for the reference
+measurement, phase structure, instrument profile, and how to enable live
+GSAS-II. A standard installation shows the recorded GSAS-II result for the
+exact public sample and computes Physics from the uploaded intensities.
+
+Other examples are available through "Download sample XRD data". Drag the
+CSV into the app and consult the matching JSON for measurement conditions.
+Research tools opens the advanced views.
+
+This folder also works as a Streamlit Community Cloud source package.
+The owner selects the repository, branch and app.py as the entrypoint.
+The recorded GSAS-II workflow works without installing GSAS-II. Live
+refinement requires a host with a working GSAS-II Python environment.

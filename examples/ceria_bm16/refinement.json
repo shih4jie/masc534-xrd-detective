@@ -1,0 +1,164 @@
+{
+  "calibration": {
+    "rwp_percent": 12.754709753347997,
+    "gof": 1.3119774274548408,
+    "points": 53252,
+    "varied_parameters": [
+      "0::A0",
+      ":0:Back;0",
+      ":0:Back;1",
+      ":0:Back;2",
+      ":0:Back;3",
+      ":0:Back;4",
+      ":0:Back;5",
+      ":0:Back;6",
+      ":0:Back;7",
+      ":0:W",
+      ":0:Y",
+      ":0:Z",
+      ":0:Scale"
+    ],
+    "cell_a_angstrom": 5.41089217698194
+  },
+  "local_reference_fits": {
+    "111": {
+      "center_deg": 7.337478270422078,
+      "sigma_deg": 0.0023155719196794183,
+      "gamma_deg": 0.002024623196301769,
+      "weighted_residual_rms": 5.177423875007036,
+      "points": 174
+    },
+    "200": {
+      "center_deg": 8.474755323608683,
+      "sigma_deg": 0.002175653718971915,
+      "gamma_deg": 0.0018934315028820814,
+      "weighted_residual_rms": 2.8353914830907274,
+      "points": 175
+    },
+    "220": {
+      "center_deg": 11.996489600609259,
+      "sigma_deg": 0.0018719451546589819,
+      "gamma_deg": 0.0019424897083159189,
+      "weighted_residual_rms": 2.6065039956970137,
+      "points": 175
+    },
+    "311": {
+      "center_deg": 14.076759571039055,
+      "sigma_deg": 0.0017351255107970847,
+      "gamma_deg": 0.0019479609642596898,
+      "weighted_residual_rms": 2.528843842756529,
+      "points": 175
+    }
+  },
+  "physics": {
+    "size_nm": 30.2500120514406,
+    "reflections": [
+      {
+        "reflection": "111",
+        "observed": {
+          "center_deg": 7.335372211668053,
+          "sigma_deg": 0.020322641637070305,
+          "gamma_deg": 0.02399383813272576,
+          "weighted_residual_rms": 1.5016557036979519,
+          "points": 135
+        },
+        "reference": {
+          "center_deg": 7.337478270422078,
+          "sigma_deg": 0.0023155719196794183,
+          "gamma_deg": 0.002024623196301769,
+          "weighted_residual_rms": 5.177423875007036,
+          "points": 174
+        },
+        "corrected_fwhm_deg": 0.07524336769726667,
+        "size_nm": 30.50769053807479
+      },
+      {
+        "reflection": "200",
+        "observed": {
+          "center_deg": 8.472653125239631,
+          "sigma_deg": 0.018661789442198734,
+          "gamma_deg": 0.02632491504597039,
+          "weighted_residual_rms": 1.4660748557874663,
+          "points": 136
+        },
+        "reference": {
+          "center_deg": 8.474755323608683,
+          "sigma_deg": 0.002175653718971915,
+          "gamma_deg": 0.0018934315028820814,
+          "weighted_residual_rms": 2.8353914830907274,
+          "points": 175
+        },
+        "corrected_fwhm_deg": 0.07533908708704273,
+        "size_nm": 30.489828300504232
+      },
+      {
+        "reflection": "220",
+        "observed": {
+          "center_deg": 11.994262955708136,
+          "sigma_deg": 0.020799737543753617,
+          "gamma_deg": 0.024172434348817166,
+          "weighted_residual_rms": 1.6074640297083593,
+          "points": 135
+        },
+        "reference": {
+          "center_deg": 11.996489600609259,
+          "sigma_deg": 0.0018719451546589819,
+          "gamma_deg": 0.0019424897083159189,
+          "weighted_residual_rms": 2.6065039956970137,
+          "points": 175
+        },
+        "corrected_fwhm_deg": 0.07675411783114736,
+        "size_nm": 30.01019580237697
+      },
+      {
+        "reflection": "311",
+        "observed": {
+          "center_deg": 14.074412936766752,
+          "sigma_deg": 0.02009225966327395,
+          "gamma_deg": 0.025416575385581043,
+          "weighted_residual_rms": 1.8687267567422654,
+          "points": 135
+        },
+        "reference": {
+          "center_deg": 14.076759571039055,
+          "sigma_deg": 0.0017351255107970847,
+          "gamma_deg": 0.0019479609642596898,
+          "weighted_residual_rms": 2.528843842756529,
+          "points": 175
+        },
+        "corrected_fwhm_deg": 0.07704519000930773,
+        "size_nm": 29.95888373201375
+      }
+    ]
+  },
+  "sample_sha256": "93c62b6670ee3fdf1558e50fb1926f9bf5ef139b9756d040586b1bff6a6bbaa8",
+  "reference_sha256": "9d53c1d4bc45b46f7a422c81560c74afabb0402d62bd80c1bf915b9380d48ac3",
+  "instprm_sha256": "7585526a53aed1b3cf2eb8c88e786d3b788a60d5a604ae9bf160e61dd68536e6",
+  "fit_limits_deg": [
+    6.7,
+    28.0
+  ],
+  "gsas_revision": "46b3d7b541d344f9506848c37b35737b1a87ddac",
+  "gsas": {
+    "rwp_percent": 8.909970669779245,
+    "gof": 4.4402476869482,
+    "points": 5326,
+    "varied_parameters": [
+      "0::A0",
+      "0:0:Size;mx",
+      "0:0:Size;i",
+      ":0:Back;0",
+      ":0:Back;1",
+      ":0:Back;2",
+      ":0:Back;3",
+      ":0:Back;4",
+      ":0:Back;5",
+      ":0:Back;6",
+      ":0:Back;7",
+      ":0:Scale"
+    ],
+    "cell_a_angstrom": 5.411752799810864,
+    "size_nm": 24.629776974493804,
+    "lorentzian_fraction": 0.4977420694243238
+  }
+}

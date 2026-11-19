@@ -1,0 +1,30 @@
+XRD SIZE–STRAIN DETECTIVE — SAMPLE DATA
+Upload the CSV, then enter the conditions below. JSON sidecars document provenance.
+All CSV angle columns are degrees 2θ.
+
+1. synthetic_40nm_gaussian.csv — one synthetic peak, reference size 40 nm.
+   Use wavelength 0.15406 nm, Powder θ–2θ, Gaussian, declared simplified
+   instrument width 0.1000° 2θ, K = 0.9, and known zero microstrain.
+   Use Single reflection (detailed), select the peak near 40°, and use
+   38.8–41.2° for the fit window.
+
+2. multi_peak_gaussian_synthetic.csv — six synthetic peaks, reference size 80 nm.
+   Use 0.15406 nm, Powder θ–2θ, Gaussian, instrument width 0.0700° 2θ,
+   K = 0.9 and known zero microstrain. Use Automatic multi-peak.
+
+3. multi_peak_lorentzian_synthetic.csv — six synthetic peaks, reference size 80 nm,
+   dimensionless microstrain 0.0004 (0.04%).
+   Use 0.15406 nm, Powder θ–2θ, Lorentzian, instrument width 0.0700° 2θ,
+   K = 0.9. Do not assert size-only broadening. In Automatic multi-peak,
+   confirm the six simulated reflections share one isotropic additive law
+   to exercise Williamson–Hall. In 2 and 3 the instrument width is an exact
+   synthetic input. The simplified constant-width mode is appropriate.
+
+4. nist_srm1979_5866_experimental.csv — actual measured ZnO at APS 11-BM.
+   Use 0.414190 Å, Powder capillary scan (analyzer detector), and leave
+   instrument width Unknown. For the ZnO 002 peak use Single reflection
+   (detailed), Lorentzian approximation, and 8.85–9.40° fit window.
+   Leave size dominance unchecked. Expected measured FWHM about 0.05603°.
+   Official reference: https://doi.org/10.18434/M32269. Certified Fourier
+   column lengths and nominal component labels differ from Scherrer FWHM size.
+   Source: NIST. Data terms: https://www.nist.gov/open/license.

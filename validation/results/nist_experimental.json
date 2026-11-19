@@ -1,0 +1,330 @@
+{
+  "run_at_utc": "2026-11-17T07:11:42.102129+00:00",
+  "manifest": {
+    "data_kind": "experimental",
+    "dataset_doi": "10.18434/M32269",
+    "authors": "Mendenhall, Marcus H.; Cline, James P.; Black, David R. (2020), NIST",
+    "download_url": "https://data.nist.gov/od/ds/mds2-2269/srm_1979_cifs_20201110a.zip",
+    "license_url": "https://www.nist.gov/open/license",
+    "archive_sha256": "1642638f56c36d7fd77929762638b794f3d3684e9bdc69301fc09496881d9544",
+    "cif_member": "5866_15_nm_022.cif",
+    "cif_sha256": "f8d5bea980a8f0b8d3bf0bc6a3b1617eb4d88d50980b81f7bf731f797d1d6f4b",
+    "csv_sha256": "be2a29afa3d5438d26ddeb7b9366ec59997fb74b952901315c8046396c9a65c3",
+    "point_count": 45504,
+    "source_block": "data_data_pd_proc_str_wppm_11bmb_5866_corrected_angles_meas",
+    "not_used": "Topas calculated intensity block is not experimental data and was not exported.",
+    "material": "ZnO SRM1979, nominal 15 nm component, run5866 bottle22",
+    "wavelength_angstrom": 0.41419,
+    "wavelength_nm": 0.041419,
+    "wavelength_provenance": "Released CIF refined value; paper section4.3 gives earlier 0.414217 angstrom. Do not combine versions.",
+    "geometry": "Powder capillary scan (analyzer detector)",
+    "instrument": "APS 11-BM",
+    "geometry_provenance": "Certification paper section4.3 and CIF 11BM analyzer-system citation; not inferred from wavelength.",
+    "specimen": "0.8 mm Kapton capillary, spun >90 Hz (certification paper section4.3)",
+    "temperature_K": 295,
+    "angle_range_deg": [
+      1.999,
+      47.4879
+    ],
+    "axis_note": "Released 4-decimal corrected coordinates; preserve their nonuniform rounding. No interpolation.",
+    "processing": "Select corrected measured block; retain every angle/intensity, omit weights from two-column export. Local existing fitter is unweighted.",
+    "calibration": "Angle calibration already applied by NIST; no numerical IPF/local pure-profile instrument width supplied in this archive. Calculated sample pattern is not an IPF.",
+    "size_dominated_established": false,
+    "instrument_fwhm_deg": null,
+    "fit_window_deg": [
+      8.85,
+      9.4
+    ],
+    "reflection": "ZnO 002 (c-axis); assignment checked against released cell c=5.20875 angstrom",
+    "shape_factor": 0.9,
+    "ground_truth_for_scherrer_nm": null,
+    "reference_note": "15 nm is a nominal component label, not a Scherrer ground truth. Certified Fourier mean column lengths are different measurands.",
+    "source_paper": "https://doi.org/10.6028/jres.125.020",
+    "export_date_utc": "2026-11-17",
+    "user_measurement": false
+  },
+  "metadata": {
+    "material": "ZnO SRM1979, nominal 15 nm component, run5866 bottle22",
+    "geometry": "Powder capillary scan (analyzer detector)",
+    "wavelength_nm": 0.041419000000000004,
+    "entered_wavelength": 0.41419,
+    "entered_wavelength_unit": "angstrom",
+    "wavelength_verified": true
+  },
+  "primary_conclusion": "Peak width measured; no justified instrument-corrected, size/strain-separated size. Pure-profile Scherrer values are conditional apparent estimates only.",
+  "primary_size_nm": null,
+  "analyses": [
+    {
+      "window_deg": [
+        8.9,
+        9.34
+      ],
+      "fit": {
+        "center_deg": 9.120283482913452,
+        "fwhm_deg": 0.06416260548932139,
+        "amplitude": 9705.539261091737,
+        "r_squared": 0.992413256658421,
+        "normalized_rmse": 0.025595731583350937,
+        "profile": "Gaussian",
+        "usable": true,
+        "warnings": []
+      },
+      "size_nm": null,
+      "category": "Insufficient information",
+      "warnings": [
+        "Uneven sampling: local fitting uses actual coordinates; no resampling applied.",
+        "No instrument calibration: only an apparent uncorrected size can be reported.",
+        "Size/strain separation is not established; confirm size-dominated broadening to obtain a conditional Scherrer estimate."
+      ],
+      "instrument_corrected": false,
+      "conditional_apparent_scherrer_nm": 33.393330115528926,
+      "conditional_category": "Preliminary estimate",
+      "conditional_warnings": [
+        "Uneven sampling: local fitting uses actual coordinates; no resampling applied.",
+        "No instrument calibration: only an apparent uncorrected size can be reported.",
+        "Conditional coherent-domain size, not grain size; K and pure-profile assumptions require physical justification."
+      ]
+    },
+    {
+      "window_deg": [
+        8.9,
+        9.34
+      ],
+      "fit": {
+        "center_deg": 9.120349747686937,
+        "fwhm_deg": 0.057141603558296845,
+        "amplitude": 11013.885080258231,
+        "r_squared": 0.9973303370029054,
+        "normalized_rmse": 0.013379725457687985,
+        "profile": "Lorentzian",
+        "usable": true,
+        "warnings": []
+      },
+      "size_nm": null,
+      "category": "Insufficient information",
+      "warnings": [
+        "Uneven sampling: local fitting uses actual coordinates; no resampling applied.",
+        "No instrument calibration: only an apparent uncorrected size can be reported.",
+        "Size/strain separation is not established; confirm size-dominated broadening to obtain a conditional Scherrer estimate."
+      ],
+      "instrument_corrected": false,
+      "conditional_apparent_scherrer_nm": 37.496377972872885,
+      "conditional_category": "Preliminary estimate",
+      "conditional_warnings": [
+        "Uneven sampling: local fitting uses actual coordinates; no resampling applied.",
+        "No instrument calibration: only an apparent uncorrected size can be reported.",
+        "Conditional coherent-domain size, not grain size; K and pure-profile assumptions require physical justification."
+      ]
+    },
+    {
+      "window_deg": [
+        8.85,
+        9.4
+      ],
+      "fit": {
+        "center_deg": 9.120266561482378,
+        "fwhm_deg": 0.06469195852549649,
+        "amplitude": 9731.712679861923,
+        "r_squared": 0.9922562020708282,
+        "normalized_rmse": 0.023845676738389863,
+        "profile": "Gaussian",
+        "usable": true,
+        "warnings": []
+      },
+      "size_nm": null,
+      "category": "Insufficient information",
+      "warnings": [
+        "Uneven sampling: local fitting uses actual coordinates; no resampling applied.",
+        "No instrument calibration: only an apparent uncorrected size can be reported.",
+        "Size/strain separation is not established; confirm size-dominated broadening to obtain a conditional Scherrer estimate."
+      ],
+      "instrument_corrected": false,
+      "conditional_apparent_scherrer_nm": 33.12008307953936,
+      "conditional_category": "Preliminary estimate",
+      "conditional_warnings": [
+        "Uneven sampling: local fitting uses actual coordinates; no resampling applied.",
+        "No instrument calibration: only an apparent uncorrected size can be reported.",
+        "Conditional coherent-domain size, not grain size; K and pure-profile assumptions require physical justification."
+      ]
+    },
+    {
+      "window_deg": [
+        8.85,
+        9.4
+      ],
+      "fit": {
+        "center_deg": 9.120318331234479,
+        "fwhm_deg": 0.05603231438805302,
+        "amplitude": 10970.187306357124,
+        "r_squared": 0.9962887076140039,
+        "normalized_rmse": 0.014644362379139596,
+        "profile": "Lorentzian",
+        "usable": true,
+        "warnings": []
+      },
+      "size_nm": null,
+      "category": "Insufficient information",
+      "warnings": [
+        "Uneven sampling: local fitting uses actual coordinates; no resampling applied.",
+        "No instrument calibration: only an apparent uncorrected size can be reported.",
+        "Size/strain separation is not established; confirm size-dominated broadening to obtain a conditional Scherrer estimate."
+      ],
+      "instrument_corrected": false,
+      "conditional_apparent_scherrer_nm": 38.2387046037023,
+      "conditional_category": "Preliminary estimate",
+      "conditional_warnings": [
+        "Uneven sampling: local fitting uses actual coordinates; no resampling applied.",
+        "No instrument calibration: only an apparent uncorrected size can be reported.",
+        "Conditional coherent-domain size, not grain size; K and pure-profile assumptions require physical justification."
+      ]
+    },
+    {
+      "window_deg": [
+        8.8,
+        9.44
+      ],
+      "fit": {
+        "center_deg": 9.120232571432428,
+        "fwhm_deg": 0.06477692553949851,
+        "amplitude": 9735.759015209118,
+        "r_squared": 0.992229645330726,
+        "normalized_rmse": 0.02251327384045473,
+        "profile": "Gaussian",
+        "usable": true,
+        "warnings": []
+      },
+      "size_nm": null,
+      "category": "Insufficient information",
+      "warnings": [
+        "Uneven sampling: local fitting uses actual coordinates; no resampling applied.",
+        "No instrument calibration: only an apparent uncorrected size can be reported.",
+        "Size/strain separation is not established; confirm size-dominated broadening to obtain a conditional Scherrer estimate."
+      ],
+      "instrument_corrected": false,
+      "conditional_apparent_scherrer_nm": 33.07663913359279,
+      "conditional_category": "Preliminary estimate",
+      "conditional_warnings": [
+        "Uneven sampling: local fitting uses actual coordinates; no resampling applied.",
+        "No instrument calibration: only an apparent uncorrected size can be reported.",
+        "Conditional coherent-domain size, not grain size; K and pure-profile assumptions require physical justification."
+      ]
+    },
+    {
+      "window_deg": [
+        8.8,
+        9.44
+      ],
+      "fit": {
+        "center_deg": 9.120298326752957,
+        "fwhm_deg": 0.05513588596375178,
+        "amplitude": 10938.577930365616,
+        "r_squared": 0.994659602541487,
+        "normalized_rmse": 0.016611695946723917,
+        "profile": "Lorentzian",
+        "usable": true,
+        "warnings": []
+      },
+      "size_nm": null,
+      "category": "Insufficient information",
+      "warnings": [
+        "Uneven sampling: local fitting uses actual coordinates; no resampling applied.",
+        "No instrument calibration: only an apparent uncorrected size can be reported.",
+        "Size/strain separation is not established; confirm size-dominated broadening to obtain a conditional Scherrer estimate."
+      ],
+      "instrument_corrected": false,
+      "conditional_apparent_scherrer_nm": 38.86040916659107,
+      "conditional_category": "Preliminary estimate",
+      "conditional_warnings": [
+        "Uneven sampling: local fitting uses actual coordinates; no resampling applied.",
+        "No instrument calibration: only an apparent uncorrected size can be reported.",
+        "Conditional coherent-domain size, not grain size; K and pure-profile assumptions require physical justification."
+      ]
+    }
+  ],
+  "conditional_sensitivity_range_nm": [
+    33.07663913359279,
+    38.86040916659107
+  ],
+  "performance": {
+    "scope": "warm parser + metadata check + Lorentzian fit; excludes browser/network",
+    "runs_s": [
+      0.07087041717022657,
+      0.1277739170473069,
+      0.07144966721534729,
+      0.0884948750026524,
+      0.07114570890553296
+    ],
+    "median_s": 0.07144966721534729,
+    "environment": {
+      "platform": "macOS-27.0.1-arm64-arm-64bit",
+      "python": "3.12.4",
+      "numpy": "2.5.5"
+    }
+  },
+  "ml": {
+    "prediction_nm": null,
+    "status": "Unsupported by current model",
+    "checks": [
+      {
+        "name": "input_tensor",
+        "status": "fail",
+        "detail": "Original LPA-NN input requires (N,10501) intensities."
+      },
+      {
+        "name": "angular_axis",
+        "status": "fail",
+        "detail": "Expected the notebook's 10501-point plotting grid (5.8438 to 27.0778777 degrees); arbitrary cropping, shifting or interpolation is not approved."
+      },
+      {
+        "name": "wavelength",
+        "status": "fail",
+        "detail": "Measurement 0.041419 nm; published Spinel experiment used 0.071724 nm (0.71724 angstrom). Matching wavelength alone is insufficient."
+      },
+      {
+        "name": "phase_context",
+        "status": "unverified",
+        "detail": "Declare the crystalline phases. This checkpoint targets MgAl2O4 in the MgO / alpha-Al2O3 reaction mixture, not arbitrary materials."
+      },
+      {
+        "name": "instrument_identity",
+        "status": "unverified",
+        "detail": "Declare the instrument. A laboratory instrument or another beamline is not interchangeable with the fixed BM01 response."
+      },
+      {
+        "name": "geometry",
+        "status": "unverified",
+        "detail": "Published specimen was a sapphire capillary at BM01; exact checkpoint-linked detector integration/configuration has not been deposited."
+      },
+      {
+        "name": "training_grid",
+        "status": "unverified",
+        "detail": "The exact 2theta training grid is not certified: the released notebook defines its grid for plotting only."
+      },
+      {
+        "name": "instrument_response_and_intensity_envelope",
+        "status": "unverified",
+        "detail": "Exact checkpoint-linked instrument U,V,W,X,Y,Z coefficients, integration settings and intensity-scale envelope are unavailable."
+      },
+      {
+        "name": "held_out_accuracy",
+        "status": "unverified",
+        "detail": "No held-out dataset with known size labels matched to this Spinel checkpoint is publicly supplied; MAE/RMSE are unavailable."
+      },
+      {
+        "name": "checkpoint_to_publication_identity",
+        "status": "unverified",
+        "detail": "The published five-output Spinel network is not the released two-output checkpoint; published accuracy cannot certify this asset."
+      }
+    ],
+    "compatible_labeled_samples": 0,
+    "MAE_nm": null,
+    "RMSE_nm": null
+  },
+  "interpretation": [
+    "No measured IPF correction; angular calibration does not remove instrumental width.",
+    "ZnO has anisotropic size, stacking faults and microstrain; one 002 reflection cannot establish size dominance or an isotropic size.",
+    "High R-squared does not establish a pure profile; residuals and profile/window sensitivity remain material.",
+    "No accuracy metric against nominal 15 nm or Fourier mean column length: these are not the same measurand.",
+    "This public synchrotron dataset is not the user's unspecified Cu scan, and is incompatible with the Spinel CNN."
+  ]
+}
