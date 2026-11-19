@@ -1,4 +1,5 @@
 """Streamlit workflow for the verified ESRF BM16 sample."""
+from http.client import HTTPException
 import json
 import logging
 import os
@@ -6,6 +7,7 @@ from pathlib import Path
 import subprocess
 from tempfile import TemporaryDirectory
 from time import perf_counter
+from urllib.request import urlopen
 
 import pandas as pd
 import streamlit as st
@@ -17,24 +19,49 @@ LOG = logging.getLogger(__name__)
 _GEOMETRIES = ["Unknown / not declared", ceria.GEOMETRY, "Other geometry"]
 
 
+@st.cache_data(show_spinner=False)
+def load_ceria_example():
+    """Retrieve and verify the exact published pattern used for the recorded fit."""
+    try:
+        with urlopen(ceria.SOURCE + ceria.SAMPLE_NAME, timeout=8) as response:
+            content = response.read(250_001)
+    except HTTPException as exc:
+        raise OSError("The archive returned an incomplete response.") from exc
+    if not ceria.is_sample(content):
+        raise ValueError("The published ceria pattern no longer matches the recorded sample.")
+    return content
+
+
 def render_reference_download():
-    with st.expander("Try a measured pattern with both methods"):
-        st.caption("Measured ceria (CeO₂) from the IUCr round robin, ESRF BM16. "
-                   "Download the original .xy and drag it into the upload area.")
-        st.link_button("Download measured pattern (.xy)", ceria.SOURCE + ceria.SAMPLE_NAME)
-        st.caption("If the link opens as text, save the original file without edits. "
-                   "Use degrees 2θ, 0.39982 Å and a powder capillary scan with an analyzer detector.")
-        if st.session_state.get("show_research_tools", False):
-            st.markdown(f"[Measured annealed reference]({ceria.SOURCE + ceria.REFERENCE_NAME}) · "
-                        f"[IUCr dataset]({ceria.SOURCE}s-s_rr.htm)")
-            for filename, label in (("9009008.cif", "Phase structure (CIF)"),
-                                    ("bm16.instprm", "Derived instrument profile (.instprm)")):
-                st.download_button(label, (ceria.ASSETS / filename).read_bytes(), filename)
+    st.link_button("Download original measured ceria (.xy)", ceria.SOURCE + ceria.SAMPLE_NAME)
+    if st.session_state.get("show_research_tools", False):
+        st.markdown(f"[Measured annealed reference]({ceria.SOURCE + ceria.REFERENCE_NAME}) · "
+                    f"[IUCr dataset]({ceria.SOURCE}s-s_rr.htm)")
+        for filename, label in (("9009008.cif", "Phase structure (CIF)"),
+                                ("bm16.instprm", "Derived instrument profile (.instprm)")):
+            st.download_button(label, (ceria.ASSETS / filename).read_bytes(), filename)
+
+
+def _guided_conditions(data):
+    st.markdown(f"**Wavelength** {ceria.WAVELENGTH_ANGSTROM:g} Å · **Geometry** {ceria.GEOMETRY}")
+    st.caption(f"ESRF BM16 · cubic CeO₂ · degrees 2θ · [Published record]({ceria.SOURCE}s-s_rr.htm)")
+    st.write("Both size estimates use an annealed reference for instrument broadening and a size-only model.")
+    conditions = data.setdefault("ceria_conditions", {})
+    confirmed = st.checkbox("I confirm the published conditions and the zero-microstrain fitting assumption",
+                            value=conditions.get("guided_confirmed", False))
+    conditions["guided_confirmed"] = confirmed
+    if st.button("Confirm and analyze", type="primary", disabled=not confirmed):
+        st.session_state["ceria_run_requested"] = True
+        st.session_state["workflow_stage"] = 3
+        st.rerun()
 
 
 def render_conditions(data, *, back_to_data):
     st.subheader("2 · Confirm conditions")
     st.button("Back to data", on_click=back_to_data)
+    if data.get("guided_ceria"):
+        _guided_conditions(data)
+        return
     st.caption(f"{data['name']} · original IUCr round-robin measurement matched by file contents.")
     st.info("The published record gives cubic ceria (CeO₂), ESRF BM16, "
             "λ = 0.39982 Å, 2θ in degrees and powder capillary geometry with an analyzer detector.")
@@ -67,10 +94,11 @@ def render_conditions(data, *, back_to_data):
             st.rerun()
 
 
-def _refine(content, evidence):
+def _refine(content, evidence, *, guided=False):
     executable = os.environ.get("XRD_GSAS_PYTHON")
+    source = "this trial pattern" if guided else "this exact upload"
     if not executable:
-        return evidence["gsas"], "Recorded GSAS-II refinement for this exact upload"
+        return evidence["gsas"], f"Recorded GSAS-II refinement for {source}"
     with TemporaryDirectory(prefix="xrd-upload-") as scratch:
         folder = Path(scratch)
         sample = folder / ceria.SAMPLE_NAME
@@ -83,15 +111,19 @@ def _refine(content, evidence):
         if run.returncode != 0:
             LOG.error("GSAS-II process exited with status %d: %s", run.returncode, run.stderr[-3000:])
             raise RuntimeError("GSAS-II could not complete the refinement.")
-        return json.loads(output.read_text())["gsas"], "Live GSAS-II refinement of this upload"
+        return json.loads(output.read_text())["gsas"], f"Live GSAS-II refinement of {source}"
 
 
 def render_analysis(data, *, change_data, back_to_conditions):
     st.subheader("3 · Physics and GSAS-II", anchor="ceria-comparison")
     st.button("Back to conditions", on_click=back_to_conditions)
-    st.caption("Measured ceria · ESRF BM16 · 0.39982 Å · analyzer capillary scan")
+    st.caption(f"Measured ceria · ESRF BM16 · {ceria.WAVELENGTH_ANGSTROM:g} Å · analyzer capillary scan")
     content = data["ceria_content"]
-    run_comparison = st.button("Compare Physics and GSAS-II", type="primary")
+    guided = data.get("guided_ceria", False)
+    requested = st.session_state.pop("ceria_run_requested", False)
+    saved = st.session_state.get("ceria_result") or {}
+    compare_button = not requested and not (guided and "gsas" in saved)
+    run_comparison = requested or (compare_button and st.button("Compare Physics and GSAS-II", type="primary"))
     if run_comparison:
         started = perf_counter()
         st.session_state.pop("ceria_result", None)
@@ -109,7 +141,7 @@ def render_analysis(data, *, change_data, back_to_conditions):
                 result = {"physics": physics}
                 st.session_state["ceria_result"] = result
                 try:
-                    gsas, label = _refine(content, evidence)
+                    gsas, label = _refine(content, evidence, guided=guided)
                     diff, percent = ceria.comparison_difference(physics["size_nm"], gsas["size_nm"])
                 except (ValueError, OSError, KeyError, RuntimeError, subprocess.TimeoutExpired):
                     LOG.exception("Live GSAS-II refinement failed")
@@ -127,21 +159,21 @@ def render_analysis(data, *, change_data, back_to_conditions):
         if "gsas" in result:
             gsas = result["gsas"]
             b.metric("GSAS-II · Rietveld", f"{gsas['size_nm']:.2f} nm")
-            a, b = st.columns(2)
-            a.metric("Absolute difference", f"{result['difference']:.2f} nm")
-            b.metric("Percent difference", f"{result['percent']:.2f}%")
+            st.markdown(f"**Absolute difference {result['difference']:.2f} nm** · "
+                        f"**Percent difference {result['percent']:.2f}%**")
             st.caption(f"{result['label']} · Rwp {gsas['rwp_percent']:.2f}% · "
                        "Percentage uses the mean of the two sizes as denominator.")
         else:
             b.metric("GSAS-II · Rietveld", "Unavailable")
             st.warning("The configured GSAS-II solver could not complete a verified refinement. "
                        "Check its installation or retry. Physics is available on its own.")
-        st.warning("These are coherent-domain sizes. The GSAS-II refinement fixed microstrain at zero as a "
-                   "fitting assumption. The Scherrer estimate assumes negligible strain. The annealed reference "
-                   "can retain some broadening, and residual strain, anisotropy and different width conventions "
-                   "can affect agreement. The percentage measures disagreement between the two fits.")
-        st.caption("Physics uses the median of four local Voigt fits and Scherrer K = 1. GSAS-II uses an "
-                   "isotropic full-pattern size parameter over 6.7–28.0° 2θ.")
+        st.warning("Both estimates describe coherent-domain size. The GSAS-II refinement fixed microstrain "
+                   "at zero as a fitting assumption. Scherrer assumes negligible strain.")
+        with st.expander("How to interpret these estimates"):
+            st.write("The annealed reference can retain broadening. Residual strain, anisotropy, and width "
+                     "conventions can affect agreement between the fits.")
+            st.caption("Physics uses four local Voigt fits and Scherrer K = 1. GSAS-II uses an "
+                       "isotropic full-pattern size parameter over 6.7–28.0° 2θ.")
         if st.session_state.get("show_research_tools", False):
             with st.expander("Fit diagnostics and reproducibility"):
                 rows = [{"Reflection": row["reflection"], "Corrected FWHM (°)": row["corrected_fwhm_deg"],

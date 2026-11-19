@@ -9,11 +9,12 @@ The IUCr Commission on Powder Diffraction round robin includes a broadened CeO�
 | Phase | [9009008.cif](../examples/ceria_bm16/9009008.cif) | Cubic fluorite CeO₂, Wyckoff, *Crystal Structures*, 2nd ed., vol. 1, pp. 239–444 (1963), via [COD 9009008](https://www.crystallography.net/cod/9009008.html), revision 291735 |
 | Instrument profile | [bm16.instprm](../examples/ceria_bm16/bm16.instprm) | Produced here by refinement of the measured annealed reference. The archive supplies the reference measurement. |
 
-## From upload to comparison
+## Compare the ceria sample
 
-1. In **Analyze My XRD**, expand **Try a measured pattern with both methods** for the download link. If the browser opens the file as text, download the original `.xy` without formatting changes. The app matches a SHA-256 checksum of the original bytes.
-2. Drop `massonbr.xy` into the upload surface, keep degrees selected and select **Load uploaded data**. The recognized file uses columns 0 and 1 for the angles and intensities, with column 2 retained for the fit weights.
-3. Verify **0.39982 angstrom**, choose **Powder capillary scan (analyzer detector)**, and confirm the phase, reference and zero-strain modeling assumption. Select **Continue to analysis** and then **Compare Physics and GSAS-II**.
+1. In **Analyze My XRD**, open **Data source** and choose **Measured ceria · ESRF BM16 · Physics + GSAS-II**. The app fetches and caches the original file from the archive after checking its SHA-256 checksum.
+2. Review **0.39982 Å**, the recorded powder capillary geometry with an analyzer detector, and the size-only fitting assumption. Check the confirmation and choose **Confirm and analyze**. The standard cloud app fits Physics and displays the recorded GSAS-II refinement.
+
+For manual upload, expand **Download sample XRD data** to get the original `massonbr.xy`. Upload it in degrees and manually confirm the published conditions before running the comparison. The recognized file uses columns 0 and 1 for angles and intensities, with column 2 retained for the fit weights.
 
 **Research tools** exposes the CIF and instrument profile downloads, the method diagnostics and the existing research tabs. Other scans use the standard Physics workflow. GSAS-II comparison is available for the exact measured pattern and confirmed conditions described here. The application does not apply this beamline calibration to arbitrary Cu-source scans.
 

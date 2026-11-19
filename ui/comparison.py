@@ -161,7 +161,7 @@ def render_comparison(line_plot):
     metadata["angular_range_deg"] = [low, high]
     st.caption(f"{data['name']} · {low:.4f}–{high:.4f}° 2θ · {metadata['wavelength_nm']:g} nm · {metadata['geometry']}")
     st.caption(f"Instrument: {metadata['instrument'] or 'Not declared'} · Scherrer calibration: {metadata['scherrer_instrument_mode']}")
-    automatic = st.session_state.get("analysis_mode") == "Automatic multi-peak"
+    automatic = data.get("analysis_mode") == "Automatic multi-peak"
     batch = st.session_state.get("multi_result") if automatic else None
     if automatic:
         if batch:

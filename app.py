@@ -15,9 +15,9 @@ ROOT=Path(__file__).resolve().parent
 APP_TITLE = "XRD Crystallite Size Analyzer"
 st.set_page_config(page_title=APP_TITLE,page_icon="🔬",layout="wide",
                    initial_sidebar_state="collapsed")
-st.title(APP_TITLE)
-st.caption("USC MASC 534 · Fall 2026")
-research = st.sidebar.toggle("Research tools", key="show_research_tools",
+header, tools = st.columns([4, 1], vertical_alignment="center")
+header.title(APP_TITLE, anchor=False)
+research = tools.toggle("Research tools", key="show_research_tools",
                              help="Enable Williamson–Hall size and microstrain analysis, simulation, and validation.")
 if research:
     analyze, explorer, compare, validation = st.tabs(
@@ -34,28 +34,7 @@ def line_plot(x, series, source, xlabel="2θ (degrees)",ylabel="Intensity (a.u.)
     st.caption("Data source: "+source)
 
 
-def render_sample_downloads():
-    with st.expander("Download sample XRD data"):
-        st.caption("All files use degrees 2θ. Upload a CSV, then enter the conditions in its matching JSON.")
-        for stem, label in (
-            ("synthetic_40nm_gaussian", "Synthetic Gaussian single peak · 40 nm"),
-            ("multi_peak_gaussian_synthetic", "Synthetic Gaussian six peaks · 80 nm"),
-            ("multi_peak_lorentzian_synthetic", "Synthetic Lorentzian six peaks · 80 nm"),
-            ("nist_srm1979_5866_experimental", "Measured NIST ZnO · APS 11-BM"),
-        ):
-            csv_path = ROOT / "examples" / f"{stem}.csv"
-            metadata_path = csv_path.with_suffix(".json")
-            if csv_path.is_file() and metadata_path.is_file():
-                data_col, conditions_col = st.columns([3, 1])
-                data_col.download_button(label, csv_path.read_bytes(), csv_path.name, "text/csv",
-                                         key=f"sample_csv_{stem}")
-                conditions_col.download_button("Conditions (JSON)", metadata_path.read_bytes(),
-                                               metadata_path.name, "application/json", key=f"sample_json_{stem}")
-
-
 with analyze:
-    if st.session_state.get("workflow_stage", 1) == 1:
-        render_sample_downloads()
     render_analysis(ROOT, line_plot)
 
 if research:

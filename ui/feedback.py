@@ -5,7 +5,8 @@ import streamlit as st
 def show_problem(kind, detail=""):
     messages = {
         "missing_file": ("No file selected", "There is no measurement to load.",
-                         "Choose a CSV, TXT, XY or DAT file, then select Load uploaded data. Or select Load synthetic example."),
+                         "Choose a CSV, TXT, XY or DAT file, then select Load uploaded data. "
+                         "To try an example, select it from Data source."),
         "file": ("This file could not be read", "The reader needs two numeric columns: 2theta and intensity.",
                  "Export a plain-text pattern with increasing angles and no missing values. For extra columns, open Column selection and choose the angle and intensity columns."),
         "wavelength": ("Confirm the wavelength", "A source name or approximate value alone does not establish the wavelength used for size analysis.",

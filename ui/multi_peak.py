@@ -118,34 +118,50 @@ def render_multi_peak(data,conditions,line_plot):
     research = st.session_state.get("show_research_tools", False)
     st.subheader("3 · Detect, fit and analyze")
     previous_step = st.empty()
-    st.caption(f"{len(x):,} uploaded points · {x[0]:.4f}–{x[-1]:.4f}° · median sampling {np.median(np.diff(x)):.6g}°")
-    with st.expander("Advanced: peak detection, selection and fit windows"):
-        prominence=st.slider("Peak prominence (% of corrected intensity range)",.5,50.,10.,step=.5)/100
-        separation=st.number_input("Minimum peak separation (2theta degrees)",min_value=.001,max_value=30.,value=.2,step=.05,format="%.3f")
-        smoothing=st.checkbox("Smooth only the detection signal (Savitzky–Golay)")
-        window=int(st.number_input("Detection smoothing window (odd sample count)",min_value=5,max_value=101,value=11,step=2)) if smoothing else 11
-        maximum=int(st.number_input("Maximum candidate peaks",min_value=1,max_value=100,value=30))
-        manual=st.checkbox("Override automatic fit-window half width")
-        halfwidth=st.number_input("Fit-window half width (degrees)",min_value=.01,max_value=20.,value=1.2,step=.05) if manual else None
-        st.caption("Detection removes an estimated background. A local linear background is fitted jointly with each raw peak. Numerical checks can reject overlap, poor sampling and truncated windows; a local maximum is not phase identification.")
-    try:
-        centers,baseline=_detect(x,y,prominence,smoothing,window,separation,maximum)
-    except (ValueError,RuntimeError) as exc:
-        st.error(f"Peak detection needs your attention: {exc}. Review the smoothing window and detection settings.")
-        return None
-    with st.expander("Select detected reflections"):
-        chosen=st.multiselect("Candidate peaks to include",[float(c) for c in centers],default=[float(c) for c in centers],
-            format_func=lambda c:f"{c:.4f}°",key="multi_selection_"+hashlib.sha256(np.asarray(centers).tobytes()+data["identity"].encode()).hexdigest())
-        st.caption("Exclude unassigned phases, overlap, doublets and artifacts after inspecting the pattern and the fit residuals. Same-phase membership must be established independently for W-H.")
-    _pattern_plot(data,centers,chosen,baseline)
-    confirmation_id=hashlib.sha256((data["identity"]+repr(chosen)+repr(halfwidth)+conditions["profile"]).encode()).hexdigest()
-    isolated=st.checkbox("I inspected the selected candidates as isolated reflections without unresolved spectral doublets",key="multi_isolated_"+confirmation_id)
-    same_phase = False
-    if research:
-        same_phase=st.checkbox("Selected reflections are independent, from one identified phase, and suitable for isotropic additive Lorentzian size/strain analysis",key="multi_phase_"+confirmation_id)
-        st.caption("Phase confirmation enables W-H only with a Lorentzian profile, explicit instrument correction, and at least three usable well-distributed reflections. Unknown strain gives apparent Scherrer estimates.")
-    settings={"centers":chosen,"prominence":prominence,"separation":separation,"smoothing":smoothing,
-              "smoothing_window":window,"maximum":maximum,"halfwidth":halfwidth,"isolated":isolated,"same_phase":same_phase}
+    example = data.get("example")
+    if example:
+        centers = data["candidates"]
+        chosen = centers.tolist()
+        halfwidth = example["fit_window_half_width_deg"]
+        isolated = True
+        same_phase = example["profile"] == "Lorentzian"
+        settings = {"centers": chosen, "halfwidth": halfwidth, "isolated": isolated, "same_phase": same_phase}
+        st.caption(f"{len(chosen)} simulated reflections · {example['profile']} profile · "
+                   f"{example['instrument_fwhm_deg']:g}° simulated instrument FWHM")
+        if same_phase:
+            st.caption("Open Research tools for the Williamson–Hall size and microstrain result.")
+        with st.expander("Inspect the pattern and selected reflections"):
+            _pattern_plot(data, centers, chosen, data["baseline"])
+    else:
+        st.caption(f"{len(x):,} uploaded points · {x[0]:.4f}–{x[-1]:.4f}° · median sampling {np.median(np.diff(x)):.6g}°")
+        with st.expander("Advanced: peak detection, selection and fit windows"):
+            prominence=st.slider("Peak prominence (% of corrected intensity range)",.5,50.,10.,step=.5)/100
+            separation=st.number_input("Minimum peak separation (2theta degrees)",min_value=.001,max_value=30.,value=.2,step=.05,format="%.3f")
+            smoothing=st.checkbox("Smooth only the detection signal (Savitzky–Golay)")
+            window=int(st.number_input("Detection smoothing window (odd sample count)",min_value=5,max_value=101,value=11,step=2)) if smoothing else 11
+            maximum=int(st.number_input("Maximum candidate peaks",min_value=1,max_value=100,value=30))
+            manual=st.checkbox("Override automatic fit-window half width")
+            halfwidth=st.number_input("Fit-window half width (degrees)",min_value=.01,max_value=20.,value=1.2,step=.05) if manual else None
+            st.caption("Detection removes an estimated background. A local linear background is fitted jointly with each raw peak. Numerical checks can reject overlap, poor sampling and truncated windows; a local maximum is not phase identification.")
+        try:
+            centers,baseline=_detect(x,y,prominence,smoothing,window,separation,maximum)
+        except (ValueError,RuntimeError) as exc:
+            st.error(f"Peak detection needs your attention: {exc}. Review the smoothing window and detection settings.")
+            return None
+        with st.expander("Select detected reflections"):
+            chosen=st.multiselect("Candidate peaks to include",[float(c) for c in centers],default=[float(c) for c in centers],
+                format_func=lambda c:f"{c:.4f}°",key="multi_selection_"+hashlib.sha256(np.asarray(centers).tobytes()+data["identity"].encode()).hexdigest())
+            st.caption("Exclude unassigned phases, overlap, doublets and artifacts after inspecting the pattern and the fit residuals. Same-phase membership must be established independently for W-H.")
+        with st.expander("Inspect the pattern and selected reflections"):
+            _pattern_plot(data,centers,chosen,baseline)
+        confirmation_id=hashlib.sha256((data["identity"]+repr(chosen)+repr(halfwidth)+conditions["profile"]).encode()).hexdigest()
+        isolated=st.checkbox("I inspected the selected candidates as isolated reflections without unresolved spectral doublets",key="multi_isolated_"+confirmation_id)
+        same_phase = False
+        if research:
+            same_phase=st.checkbox("Selected reflections are independent, from one identified phase, and suitable for isotropic additive Lorentzian size/strain analysis",key="multi_phase_"+confirmation_id)
+            st.caption("Phase confirmation enables W-H only with a Lorentzian profile, explicit instrument correction, and at least three usable well-distributed reflections. Unknown strain gives apparent Scherrer estimates.")
+        settings={"centers":chosen,"prominence":prominence,"separation":separation,"smoothing":smoothing,
+                  "smoothing_window":window,"maximum":maximum,"halfwidth":halfwidth,"isolated":isolated,"same_phase":same_phase}
     identity=hashlib.sha256((data["identity"]+json.dumps(conditions,sort_keys=True)+json.dumps(settings,sort_keys=True)).encode()).hexdigest()
     saved=st.session_state.get("multi_result")
     if saved and saved["identity"]!=identity:

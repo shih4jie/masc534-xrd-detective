@@ -19,6 +19,14 @@ from xrd import ceria
 from . import ceria as ceria_ui
 
 LOG = logging.getLogger(__name__)
+UPLOAD_SOURCE = "Upload your own pattern"
+CERIA_TRIAL = "Measured ceria · ESRF BM16 · Physics + GSAS-II"
+TRIAL_FILES = {
+    "Synthetic Gaussian single peak · 40 nm": "synthetic_40nm_gaussian",
+    "Synthetic Gaussian six peaks · 80 nm": "multi_peak_gaussian_synthetic",
+    "Synthetic Lorentzian six peaks · 80 nm": "multi_peak_lorentzian_synthetic",
+    "Measured NIST ZnO · APS 11-BM": "nist_srm1979_5866_experimental",
+}
 
 
 @st.cache_data(show_spinner=False)
@@ -43,6 +51,7 @@ def clear_result():
     st.session_state.pop("workflow_scroll_result", None)
     st.session_state.pop("analysis", None)  # Remove pre-wizard cached results too.
     st.session_state.pop("ceria_result", None)
+    st.session_state.pop("ceria_run_requested", None)
 
 
 def change_data():
@@ -64,7 +73,12 @@ def _defaults(example=None):
             "profile":"Gaussian", "instrument_mode":"Unknown", "instrument":.1,
             "reference":"", "calibration_confirmed":False, "k":.9,
             "size_dominated":False,"instrument_reviewed":False,"calibration_table":None}
-    if example is not None:
+    if example and example.get("data_kind") == "experimental":
+        conditions.update(material=example["material"], wl_value=example["wavelength_angstrom"],
+                          geometry=example["geometry"], profile="Lorentzian", k=example["shape_factor"],
+                          size_dominated=example["size_dominated_established"], instrument_reviewed=True,
+                          instrument_name=example["instrument"], phases="ZnO")
+    elif example is not None:
         conditions.update(wl_value=example["wavelength_nm"], wl_unit="nm",
                           geometry="Synthetic powder-like isolated peak", profile=example["profile"],
                           instrument_mode="Declared simplified constant width",
@@ -73,11 +87,13 @@ def _defaults(example=None):
     return conditions
 
 
-def _load(content, name, angle_unit, columns, *, example=None):
+def _load(content, name, angle_unit, columns, *, example=None, guided_ceria=False):
     clear_result()
-    teaching = example is not None
+    teaching = example is not None and example.get("data_kind") != "experimental"
     try:
         matched_ceria = not teaching and ceria.is_sample(content)
+        if guided_ceria and not matched_ceria:
+            raise ValueError("The downloaded pattern differs from the recorded BM16 data.")
         if matched_ceria:
             if angle_unit != "degrees" or columns not in (None, (0, 1)):
                 raise ValueError("The published BM16 .xy uses degrees 2theta in column 0 and counts in column 1. "
@@ -85,13 +101,17 @@ def _load(content, name, angle_unit, columns, *, example=None):
             columns = (0, 1)
         with st.status("Loading pattern and finding candidate reflections…", expanded=True) as status:
             pattern, candidates, baseline = prepare_pattern(content, angle_unit, columns, name)
-            if teaching:
+            if example and "centers_deg" in example:
+                candidates = np.asarray(example["centers_deg"], dtype=float)
+            elif example and "two_theta_center_deg" in example:
                 candidates = np.array([example["two_theta_center_deg"]])
+            elif example and "fit_window_deg" in example:
+                candidates = np.array([np.mean(example["fit_window_deg"])])
             status.update(label="Data loaded", state="complete", expanded=False)
-        fingerprint = hashlib.sha256(content + repr((name, angle_unit, columns, teaching)).encode()).hexdigest()
+        fingerprint = hashlib.sha256(content + repr((name, angle_unit, columns, teaching, guided_ceria)).encode()).hexdigest()
         st.session_state["workflow_data"] = {"pattern":pattern, "candidates":candidates,
             "baseline":baseline, "identity":fingerprint, "teaching":teaching,
-            "angle_unit":angle_unit, "name":name}
+            "angle_unit":angle_unit, "name":name, "example":example, "guided_ceria":guided_ceria}
         if matched_ceria:
             st.session_state["workflow_data"]["ceria_content"] = content
         st.session_state["workflow_conditions"] = _defaults(example)
@@ -106,44 +126,92 @@ def _load(content, name, angle_unit, columns, *, example=None):
         st.session_state["workflow_problem"] = ("file", "The plain-text reader could not interpret this file. Try a two-column text export.")
 
 
+def _load_trial(root, source):
+    if source == CERIA_TRIAL:
+        try:
+            with st.spinner("Loading the original measured ceria pattern…"):
+                content = ceria_ui.load_ceria_example()
+        except (OSError, ValueError) as exc:
+            LOG.warning("Could not load the public ceria example: %s", exc)
+            st.error("The original ceria file is temporarily unavailable or could not be verified. "
+                     "Retry, or download the original XY below and choose Upload your own pattern.")
+            return
+        _load(content, CERIA_TRIAL, "degrees", None, guided_ceria=True)
+        return
+
+    stem = TRIAL_FILES[source]
+    sample = root / "examples" / f"{stem}.csv"
+    try:
+        content = sample.read_bytes()
+        example = json.loads(sample.with_suffix(".json").read_text())
+    except (OSError, ValueError):
+        LOG.exception("Could not load the bundled example %s", stem)
+        st.error("This bundled sample could not be loaded. Try another sample.")
+        return
+    name = "Synthetic 40 nm teaching example · seed 534" if stem == "synthetic_40nm_gaussian" else source
+    _load(content, name, "degrees", None, example=example)
+
+
+def _sample_downloads(root):
+    with st.expander("Download sample XRD data"):
+        st.caption("Patterns use degrees 2θ. For manual uploads, see the matching conditions JSON.")
+        ceria_ui.render_reference_download()
+        for label, stem in TRIAL_FILES.items():
+            csv_path = root / "examples" / f"{stem}.csv"
+            metadata_path = csv_path.with_suffix(".json")
+            if csv_path.is_file() and metadata_path.is_file():
+                data_col, conditions_col = st.columns([3, 1])
+                data_col.download_button(label, csv_path.read_bytes(), csv_path.name, "text/csv",
+                                         key=f"sample_csv_{stem}")
+                conditions_col.download_button("Conditions (JSON)", metadata_path.read_bytes(),
+                                               metadata_path.name, "application/json", key=f"sample_json_{stem}")
+
+
+def _request_trial():
+    st.session_state["trial_selected"] = True
+    st.session_state.pop("workflow_problem", None)
+
+
 def _load_step(root):
-    st.subheader("1 · Load data")
+    st.subheader("1 · Choose data")
     if loaded := st.session_state.get("workflow_data"):
         st.caption(f"Loaded data · {loaded['name']} · 2θ in {loaded['angle_unit']}")
         st.button("Continue with loaded data", on_click=_stage, args=(2,))
-    st.write("Drag a CSV, TXT, XY or DAT file into the upload area, or try the synthetic example.")
-    mode = st.radio("Data source", ["Synthetic teaching example", "Upload measurement"], index=1, horizontal=True)
-    if st.button("Load synthetic example", type="primary" if mode=="Synthetic teaching example" else "secondary"):
-        sample = root / "examples" / "synthetic_40nm_gaussian.csv"
-        example = json.loads(sample.with_suffix(".json").read_text())
-        _load(sample.read_bytes(), "Synthetic 40 nm teaching example · seed 534",
-              "degrees", None, example=example)
-    st.caption("Synthetic example: a known 40 nm isolated peak, not experimental data or an identified material.")
-    file = st.file_uploader("2theta and intensity", type=["csv","txt","xy","dat"], disabled=mode!="Upload measurement")
-    angle_unit = st.selectbox("Uploaded 2theta unit", ["degrees","radians"])
-    st.caption("Headers identify angle/intensity columns when unambiguous; otherwise choose columns. Increasing angles and no missing values are required. Confirm units and geometry in step 2.")
+    st.write("Upload your own pattern or choose one of five trial patterns.")
+    source = st.selectbox("Data source", (UPLOAD_SOURCE, CERIA_TRIAL, *TRIAL_FILES),
+                          key="workflow_source", on_change=_request_trial)
+    selected = st.session_state.pop("trial_selected", False)
+    if source != UPLOAD_SOURCE:
+        if st.button("Load selected sample", type="primary") or selected:
+            _load_trial(root, source)
+        if st.session_state.get("workflow_problem"):
+            show_problem(*st.session_state["workflow_problem"])
+        _sample_downloads(root)
+        return
+
+    file = st.file_uploader("2theta and intensity", type=["csv", "txt", "xy", "dat"])
+    angle_unit = st.selectbox("Uploaded 2theta unit", ["degrees", "radians"])
     with st.expander("Column selection (only for files with extra columns)"):
+        st.caption("Select columns if your file has extra unlabeled numeric columns.")
         explicit = st.checkbox("Choose columns explicitly (files with more than two columns)")
         columns = None
         if explicit:
             a, b = st.columns(2)
-            columns = (int(a.number_input("Angle column (zero based)",0,20,0)),
-                       int(b.number_input("Intensity column (zero based)",0,20,1)))
-    if mode == "Upload measurement":
-        if st.button("Load uploaded data", type="primary"):
-            if file is None:
-                st.session_state["workflow_problem"] = ("missing_file", "")
-            elif Path(file.name).suffix.lower() not in {".csv",".txt",".xy",".dat"}:
-                st.session_state["workflow_problem"] = ("file", "Use CSV, TXT, XY or DAT, not a binary workbook or image.")
-            else:
-                _load(file.getvalue(), file.name, angle_unit, columns)
+            columns = (int(a.number_input("Angle column (zero based)", 0, 20, 0)),
+                       int(b.number_input("Intensity column (zero based)", 0, 20, 1)))
+    if st.button("Load uploaded data", type="primary"):
+        if file is None:
+            st.session_state["workflow_problem"] = ("missing_file", "")
+        elif Path(file.name).suffix.lower() not in {".csv", ".txt", ".xy", ".dat"}:
+            st.session_state["workflow_problem"] = ("file", "Use a CSV, TXT, XY or DAT export.")
+        else:
+            _load(file.getvalue(), file.name, angle_unit, columns)
     if st.session_state.get("workflow_problem"):
         show_problem(*st.session_state["workflow_problem"])
+    _sample_downloads(root)
 
 
 def _measurement_fields(conditions, teaching, verified):
-    material = st.text_input("Material / sample description", value=conditions["material"],
-                            placeholder="Optional; leave blank if unknown", key="sample_material")
     a, b = st.columns([2,1])
     prefix = "demo" if teaching else "upload"
     wl_value = a.number_input("Wavelength", min_value=.0001, value=conditions["wl_value"], format="%.6f", key=prefix+"_wavelength")
@@ -155,19 +223,18 @@ def _measurement_fields(conditions, teaching, verified):
     else:
         geometries = ["Unknown / not declared","Powder θ–2θ scan","Integrated powder Debye–Scherrer rings","Powder capillary scan (analyzer detector)","Other (requires method review)"]
         geometry = st.selectbox("Measurement geometry", geometries, index=geometries.index(conditions["geometry"]), key="upload_geometry")
-        st.caption("Choose how the instrument collected the scan, such as a powder θ–2θ scan or a "
-                   "capillary scan. Use the instrument record or the conditions JSON supplied with a trial file.")
-        st.caption("The wavelength starts with an editable Cu Kα example. Verify the actual wavelength "
-                   "and how the source doublet was handled.")
+        st.caption("Use the instrument record for geometry, wavelength, and how the source doublet was handled.")
         verified = st.checkbox("I verified the wavelength and angular units for this measurement",
                                value=conditions["verified"], key="upload_wavelength_verified")
-    profile = st.selectbox("Pure peak profile", ["Gaussian","Lorentzian"], index=["Gaussian","Lorentzian"].index(conditions["profile"]))
-    st.caption("Use a profile supported by your reflection and reference. Mixed Voigt profiles require another method.")
+    a, b = st.columns(2)
+    profile = a.selectbox("Pure peak profile", ["Gaussian","Lorentzian"],
+                          index=["Gaussian","Lorentzian"].index(conditions["profile"]),
+                          help="Choose the profile supported by your reflection and reference. Mixed profiles require separate analysis.")
     modes = ["Unknown", "Declared simplified constant width"]
     if not teaching:
         modes.extend(["Calibrated local reference width", "Calibrated width vs angle"])
     prior_mode = conditions["instrument_mode"]
-    instrument_mode = st.selectbox("Instrument broadening information", modes,
+    instrument_mode = b.selectbox("Instrument broadening information", modes,
                                    index=modes.index(prior_mode) if prior_mode in modes else 0)
     instrument, reference, confirmed = conditions["instrument"], conditions["reference"], conditions["calibration_confirmed"]
     calibration_table = conditions.get("calibration_table")
@@ -203,11 +270,14 @@ def _measurement_fields(conditions, teaching, verified):
         confirmed = st.checkbox("Calibration uses matching geometry, wavelength, selected angular range and the same pure profile; reference intrinsic width is negligible or removed",value=confirmed)
     reviewed = st.checkbox("I reviewed the instrument information and profile choice above, including any unknown width",value=conditions.get("instrument_reviewed",False),key="instrument_reviewed")
     size_dominated = st.checkbox("Assume corrected sample broadening is size dominated (negligible strain/defects)",value=conditions["size_dominated"])
-    st.caption("Automatic mode can report apparent Scherrer sizes when strain is unknown. These attribute all remaining breadth to size; the detailed single-reflection mode retains the stricter size-withholding option.")
     with st.expander("Advanced: Scherrer factor and physical assumptions"):
         k = st.number_input("FWHM Scherrer shape factor K",min_value=.1,max_value=2.,value=conditions["k"],step=.01)
         st.write("K = 0.9 is a stated FWHM convention, not a universal shape constant. Size is coherent-domain length, not grain size. Instrument correction requires matching pure profiles.")
-    with st.expander("Instrument identity and phase information"):
+        st.write("Automatic mode can report apparent Scherrer sizes when strain is unknown. These attribute "
+                 "all remaining breadth to size. Detailed single-reflection mode can report width alone.")
+    with st.expander("Sample, instrument and phase details"):
+        material = st.text_input("Material / sample description", value=conditions["material"],
+                                placeholder="Optional; leave blank if unknown", key="sample_material")
         instrument_name = st.text_input("Instrument / beamline", value=conditions.get("instrument_name", ""),
                                         placeholder="Optional", key="measurement_instrument")
         phases = st.text_input("Crystalline phases (comma separated)", value=conditions.get("phases", ""),
@@ -223,17 +293,30 @@ def _measurement_fields(conditions, teaching, verified):
 def _conditions_step(data):
     st.subheader("2 · Confirm conditions")
     st.button("Back to data", on_click=_stage, args=(1,))
-    st.caption(f"Source: {data['name']} · 2θ in {data['angle_unit']} · no interpolation")
+    st.caption(f"{data['name']} · 2θ in {data['angle_unit']}")
     conditions = st.session_state["workflow_conditions"]
     teaching = data["teaching"]
-    verified = None
-    if teaching:
-        st.info("The built-in sample has one Gaussian reflection near 40° 2θ, wavelength 0.15406 nm, "
-                "simulated instrument FWHM 0.10°, zero simulated microstrain, and a Scherrer factor of 0.9.")
-        verified = st.checkbox("I reviewed the synthetic example settings",
-                               value=conditions["verified"], key="demo_wavelength_verified")
-    with st.expander("Optional · change sample settings") if teaching else nullcontext():
-        calibration_error = _measurement_fields(conditions, teaching, verified)
+    example = data.get("example")
+    calibration_error = None
+    if example:
+        unit = "Å" if conditions["wl_unit"] == "angstrom" else conditions["wl_unit"]
+        st.markdown(f"**Wavelength** {conditions['wl_value']:g} {unit} · **Geometry** {conditions['geometry']}")
+        if teaching:
+            st.caption(f"Simulated {example['profile'].lower()} peaks · instrument FWHM "
+                       f"{example['instrument_fwhm_deg']:g}° · microstrain {example['microstrain']*100:g}%")
+            verified = st.checkbox("I reviewed the synthetic example settings",
+                                   value=conditions["verified"], key="demo_wavelength_verified")
+        else:
+            st.info("This measured sample demonstrates the ZnO 002 peak width. The dataset does not "
+                    "supply the instrumental width needed for a corrected size.")
+            verified = st.checkbox("I reviewed the published sample conditions", value=conditions["verified"])
+        if "two_theta_center_deg" in example:
+            with st.expander("Optional · change sample settings"):
+                calibration_error = _measurement_fields(conditions, teaching, verified)
+        else:
+            conditions["verified"] = verified
+    else:
+        calibration_error = _measurement_fields(conditions, teaching, None)
     metadata = workflow_metadata(conditions)
     if st.button("Continue to analysis",type="primary"):
         clear_result()
@@ -317,12 +400,18 @@ def render_gsas_status():
 
 def _result(data, conditions, saved, line_plot):
     result = saved["result"]
+    fit = result["fit"]
+    example = data.get("example") or {}
+    width_only_example = example.get("data_kind") == "experimental" and fit.usable
     st.subheader("3 · Result")
     st.button("Back to conditions", on_click=back_to_conditions)
     st.success("Analysis complete")
     st.markdown("**Coherent-domain size** — the length over which the crystal diffracts coherently; this is not grain size.")
     if result["size_nm"] is not None:
         st.metric("Scherrer size",f"{result['size_nm']:.2f} nm")
+    elif width_only_example:
+        st.metric("ZnO 002 peak FWHM", f"{fit.fwhm_deg:.5f}° 2θ")
+        st.info("A corrected crystallite size requires a matching instrumental width and a supported strain assumption.")
     else:
         st.warning("No justified size estimate. The available information or peak fit does not support one.")
     method = "Scherrer" if result["size_nm"] is not None else "Peak fit; size withheld"
@@ -337,9 +426,8 @@ def _result(data, conditions, saved, line_plot):
         elif conditions["instrument_mode"]=="Declared simplified constant width":
             st.warning("Important limit: instrument width is an assumed constant, not a measured calibration.")
         st.caption("Size assumes negligible strain/defect broadening, an isolated reflection, and the selected profile/K convention.")
-    else:
+    elif not width_only_example:
         show_problem("fit" if not result["fit"].usable else "size_evidence", "; ".join(result["warnings"]))
-    fit = result["fit"]
     for note in result["warnings"]:
         if "Instrument-dominated" in note or "Negative intensities" in note or "Uneven sampling" in note:
             st.warning(note)
@@ -379,6 +467,8 @@ def _reflection_controls(data, peak, line_plot):
     index = st.selectbox("Reflection to analyze",range(len(labels)),format_func=lambda i:labels[i],index=peak[3] if peak else 0)
     center = float(candidates[index])
     nominal_window = (float(max(x[0],center-1.2)),float(min(x[-1],center+1.2)))
+    example = data.get("example") or {}
+    nominal_window = tuple(example.get("fit_window_deg", nominal_window))
     defaults = nominal_window
     if peak and peak[3]==index:
         defaults = peak[:2]
@@ -395,10 +485,10 @@ def _reflection_controls(data, peak, line_plot):
             if lower >= upper:
                 st.error("Lower fit bound must be below the upper bound. Enter an increasing interval around one reflection.")
     line_plot(x,{"Supplied intensity":y},data["name"])
-    example_window = teaching and np.allclose((lower, upper), nominal_window, atol=1e-8, rtol=0)
+    example_window = example and np.allclose((lower, upper), nominal_window, atol=1e-8, rtol=0)
     same_window = peak and peak[3] == index and np.allclose((lower, upper), peak[:2], atol=1e-8, rtol=0)
     isolation_key = f"isolated_{data['identity']}_{index}"
-    if teaching:
+    if example:
         # A changed teaching window needs its own confirmation. Uploaded patterns
         # use an explicit, stable checkbox while entering and confirming bounds.
         isolation_key += f"_{lower:.10g}_{upper:.10g}"
@@ -418,17 +508,21 @@ def _analysis_step(data, line_plot):
         clear_result()
         st.info("Previous results cleared because data or analysis conditions changed.")
     teaching = data["teaching"]
-    st.subheader("3 · Analyze the synthetic example" if teaching else "3 · Select a reflection and analyze")
+    example = data.get("example")
+    heading = "3 · Select a reflection and analyze"
+    if example:
+        heading = "3 · Analyze the synthetic example" if teaching else "3 · Fit the ZnO 002 peak"
+    st.subheader(heading)
     st.button("Back to conditions", on_click=back_to_conditions)
-    if teaching:
-        st.caption("The known reflection and its fit window are preselected. The size is calculated from the fitted pattern.")
+    if example:
+        st.caption("The reference reflection and fit window are ready.")
     else:
         st.write("Choose one isolated peak. Inspect the profile before confirming the assumptions.")
     if not len(data["candidates"]):
         st.warning("No candidate reflection detected. Use Automatic multi-peak mode to adjust detection settings, or load a pattern with resolved peaks.")
         st.button("Change data",on_click=change_data)
         return None
-    with st.expander("Optional · review the selected reflection and fit window") if teaching else nullcontext():
+    with st.expander("Review the reflection and fit window") if example else nullcontext():
         peak = _reflection_controls(data, peak, line_plot)
     lower, upper, isolated, _ = peak
     st.caption(f"{conditions['profile']} profile · K={conditions['k']:g} · size dominance {'assumed' if conditions['size_dominated'] else 'not established'}")
@@ -467,18 +561,20 @@ def _analysis_step(data, line_plot):
 
 def render_analysis(root, line_plot):
     stage = st.session_state.setdefault("workflow_stage",1)
-    st.caption("1 Load data  →  2 Confirm conditions  →  3 Analyze")
-    with st.expander("What does the size mean?"):
-        st.write("Peak broadening can estimate coherent-domain size under explicit assumptions. Scherrer does not automatically separate strain and instrument effects, and coherent domains are not necessarily physical grains.")
+    steps = ["1 Choose data", "2 Confirm conditions", "3 Analyze"]
+    steps[stage - 1] = f"**{steps[stage - 1]}**"
+    st.caption(" → ".join(steps))
     if stage == 1 or "workflow_data" not in st.session_state:
-        ceria_ui.render_reference_download()
         _load_step(root)
+        with st.expander("What does the size mean?"):
+            st.write("XRD peak broadening can estimate coherent-domain size when instrument and strain "
+                     "contributions are accounted for. Grain size requires a separate measurement.")
         return None
     data = st.session_state["workflow_data"]
     if "ceria_content" in data:
         if stage == 2:
             ceria_ui.render_conditions(data, back_to_data=lambda: _stage(1))
-            if st.button("Use standard Physics workflow"):
+            if not data.get("guided_ceria") and st.button("Use standard Physics workflow"):
                 data.pop("ceria_content")
                 st.rerun()
             return None
@@ -486,11 +582,12 @@ def render_analysis(root, line_plot):
     if stage == 2:
         _conditions_step(data)
         return None
-    if data["teaching"]:
-        return _analysis_step(data, line_plot)
     modes = ["Automatic multi-peak", "Single reflection (detailed)"]
-    mode = st.radio("Analysis mode", modes, index=modes.index(data.get("analysis_mode", modes[0])),
-                    horizontal=True, key="analysis_mode")
+    if example := data.get("example"):
+        mode = modes[0] if "centers_deg" in example else modes[1]
+    else:
+        mode = st.radio("Analysis mode", modes, index=modes.index(data.get("analysis_mode", modes[0])),
+                        horizontal=True, key="analysis_mode")
     data["analysis_mode"] = mode
     if mode == "Automatic multi-peak":
         from .multi_peak import render_multi_peak
