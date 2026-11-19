@@ -14,6 +14,7 @@ from xrd.analysis import analyze_window
 from ml.inference import predict_crystallite_size
 from .measurement import measurement_metadata, require_physics_metadata
 from .feedback import show_problem, error_kind
+from .pattern_chart import render_pattern_chart
 from xrd.instrument_io import read_width_calibration
 from xrd import ceria
 from . import ceria as ceria_ui
@@ -297,8 +298,29 @@ def _conditions_step(data):
     conditions = st.session_state["workflow_conditions"]
     teaching = data["teaching"]
     example = data.get("example")
+    single_sample = example is not None and "two_theta_center_deg" in example
+    if single_sample:
+        defaults = _defaults(example)
+        st.markdown(f"**Wavelength** {defaults['wl_value']:g} nm · **Geometry** {defaults['geometry']}")
+        st.caption(f"Gaussian peak · simulated instrument FWHM {defaults['instrument']:g}° · zero microstrain")
+        if st.button("Confirm and analyze sample", type="primary"):
+            defaults["verified"] = True
+            window = _nominal_window(data, float(data["candidates"][0]))
+            _run_single(data, defaults, (*window, True, 0))
+        controls = st.expander("Optional · change sample settings")
+    else:
+        controls = nullcontext()
+    with controls:
+        return _review_conditions(conditions, teaching, example, single_sample)
+
+
+def _review_conditions(conditions, teaching, example, single_sample):
     calibration_error = None
-    if example:
+    if single_sample:
+        verified = st.checkbox("I reviewed the synthetic example settings",
+                               value=conditions["verified"], key="demo_wavelength_verified")
+        calibration_error = _measurement_fields(conditions, teaching, verified)
+    elif example:
         unit = "Å" if conditions["wl_unit"] == "angstrom" else conditions["wl_unit"]
         st.markdown(f"**Wavelength** {conditions['wl_value']:g} {unit} · **Geometry** {conditions['geometry']}")
         if teaching:
@@ -310,15 +332,11 @@ def _conditions_step(data):
             st.info("This measured sample demonstrates the ZnO 002 peak width. The dataset does not "
                     "supply the instrumental width needed for a corrected size.")
             verified = st.checkbox("I reviewed the published sample conditions", value=conditions["verified"])
-        if "two_theta_center_deg" in example:
-            with st.expander("Optional · change sample settings"):
-                calibration_error = _measurement_fields(conditions, teaching, verified)
-        else:
-            conditions["verified"] = verified
+        conditions["verified"] = verified
     else:
         calibration_error = _measurement_fields(conditions, teaching, None)
     metadata = workflow_metadata(conditions)
-    if st.button("Continue to analysis",type="primary"):
+    if st.button("Continue to analysis", type="secondary" if single_sample else "primary"):
         clear_result()
         try:
             require_physics_metadata(metadata)
@@ -405,15 +423,19 @@ def _result(data, conditions, saved, line_plot):
     width_only_example = example.get("data_kind") == "experimental" and fit.usable
     st.subheader("3 · Result")
     st.button("Back to conditions", on_click=back_to_conditions)
-    st.success("Analysis complete")
-    st.markdown("**Coherent-domain size** — the length over which the crystal diffracts coherently; this is not grain size.")
-    if result["size_nm"] is not None:
-        st.metric("Scherrer size",f"{result['size_nm']:.2f} nm")
+    size_card, chart = st.columns([1, 1.9], vertical_alignment="center")
+    size = result["size_nm"]
+    if size is not None:
+        size_card.metric("Scherrer size", f"{size:.2f} nm")
     elif width_only_example:
-        st.metric("ZnO 002 peak FWHM", f"{fit.fwhm_deg:.5f}° 2θ")
-        st.info("A corrected crystallite size requires a matching instrumental width and a supported strain assumption.")
+        size_card.metric("ZnO 002 peak FWHM", f"{fit.fwhm_deg:.5f}° 2θ")
     else:
-        st.warning("No justified size estimate. The available information or peak fit does not support one.")
+        size_card.warning("No justified size estimate.")
+    with chart:
+        render_pattern_chart(data["pattern"], [fit.center_deg] if size is not None else [])
+    st.markdown("**Coherent-domain size** — the length over which the crystal diffracts coherently; this is not grain size.")
+    if width_only_example:
+        st.info("A corrected crystallite size requires a matching instrumental width and a supported strain assumption.")
     method = "Scherrer" if result["size_nm"] is not None else "Peak fit; size withheld"
     st.write(f"**Method:** {method} · {conditions['profile']} FWHM")
     st.subheader(result["category"])
@@ -459,16 +481,20 @@ def _result(data, conditions, saved, line_plot):
     return result
 
 
+def _nominal_window(data, center):
+    x = data["pattern"].two_theta_deg
+    bounds = (float(max(x[0], center - 1.2)), float(min(x[-1], center + 1.2)))
+    return tuple((data.get("example") or {}).get("fit_window_deg", bounds))
+
+
 def _reflection_controls(data, peak, line_plot):
     x, y = data["pattern"].two_theta_deg, data["pattern"].intensity
-    teaching = data["teaching"]
     candidates = data["candidates"]
     labels = [f"{position:.4f}°" for position in candidates]
     index = st.selectbox("Reflection to analyze",range(len(labels)),format_func=lambda i:labels[i],index=peak[3] if peak else 0)
     center = float(candidates[index])
-    nominal_window = (float(max(x[0],center-1.2)),float(min(x[-1],center+1.2)))
     example = data.get("example") or {}
-    nominal_window = tuple(example.get("fit_window_deg", nominal_window))
+    nominal_window = _nominal_window(data, center)
     defaults = nominal_window
     if peak and peak[3]==index:
         defaults = peak[:2]
@@ -498,6 +524,34 @@ def _reflection_controls(data, peak, line_plot):
     return lower, upper, isolated, index
 
 
+def _run_single(data, conditions, peak):
+    clear_result()
+    lower, upper, isolated, _ = peak
+    started = perf_counter()
+    with st.status("Analyzing peak — fitting and checking physical assumptions…", expanded=True) as status:
+        feedback_ms = (perf_counter() - started) * 1000
+        try:
+            result = execute_analysis(data, conditions, lower, upper, isolated)
+        except (ValueError, TypeError, RuntimeError, FloatingPointError) as exc:
+            status.update(label="Analysis needs your attention", state="error", expanded=False)
+            show_problem(error_kind(exc), str(exc))
+            return
+        except Exception:
+            LOG.exception("Peak analysis stopped unexpectedly")
+            status.update(label="Analysis needs your attention", state="error", expanded=False)
+            show_problem("fit", "The numerical solver stopped before a defensible result was available.")
+            return
+        st.session_state["workflow_conditions"] = conditions
+        st.session_state["workflow_peak"] = peak
+        st.session_state["workflow_result"] = {"identity": analysis_identity(data, conditions, peak),
+            "result": result, "elapsed_s": perf_counter() - started, "status_requested_ms": feedback_ms,
+            "render_token": int(perf_counter() * 1_000_000_000)}
+        st.session_state["workflow_scroll_result"] = True
+        _stage(3)
+        status.update(label="Analysis complete", state="complete", expanded=False)
+        st.rerun()
+
+
 def _analysis_step(data, line_plot):
     conditions = st.session_state["workflow_conditions"]
     saved = st.session_state.get("workflow_result")
@@ -524,30 +578,11 @@ def _analysis_step(data, line_plot):
         return None
     with st.expander("Review the reflection and fit window") if example else nullcontext():
         peak = _reflection_controls(data, peak, line_plot)
-    lower, upper, isolated, _ = peak
+    lower, upper, _, _ = peak
     st.caption(f"{conditions['profile']} profile · K={conditions['k']:g} · size dominance {'assumed' if conditions['size_dominated'] else 'not established'}")
     st.session_state["workflow_peak"] = peak
     if st.button("Analyze",type="primary",disabled=lower>=upper):
-        clear_result()
-        started = perf_counter()
-        with st.status("Analyzing peak — fitting and checking physical assumptions…",expanded=True) as status:
-            feedback_ms = (perf_counter()-started)*1000
-            try:
-                result = execute_analysis(data,conditions,lower,upper,isolated)
-                elapsed = perf_counter()-started
-                st.session_state["workflow_result"] = {"identity":analysis_identity(data,conditions,peak),
-                    "result":result,"elapsed_s":elapsed,"status_requested_ms":feedback_ms,
-                    "render_token":int(perf_counter()*1_000_000_000)}
-                st.session_state["workflow_scroll_result"] = True
-                status.update(label="Analysis complete",state="complete",expanded=False)
-                st.rerun()
-            except (ValueError, TypeError, RuntimeError, FloatingPointError) as exc:
-                status.update(label="Analysis needs your attention",state="error",expanded=False)
-                show_problem(error_kind(exc),str(exc))
-            except Exception:
-                LOG.exception("Peak analysis stopped unexpectedly")
-                status.update(label="Analysis needs your attention",state="error",expanded=False)
-                show_problem("fit", "The numerical solver stopped before a defensible result was available.")
+        _run_single(data, conditions, peak)
     st.button("Change data",on_click=change_data)
     pattern = data["pattern"]
     x, y = pattern.two_theta_deg, pattern.intensity

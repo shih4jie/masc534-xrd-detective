@@ -9,6 +9,7 @@ import pandas as pd
 import streamlit as st
 
 from ui.measurement import require_physics_metadata
+from ui.pattern_chart import render_pattern_chart
 from xrd.batch_analysis import analyze_peaks
 from xrd.peak_detection import detect_peaks
 
@@ -200,15 +201,22 @@ def render_multi_peak(data,conditions,line_plot):
         result=saved["result"];s=result["summary"];wh=result["wh"];r=wh["result"]
         st.subheader("Crystallite size results")
         st.button("Back to conditions", on_click=back_to_conditions)
+        size_card, chart = st.columns([1, 1.9], vertical_alignment="center")
+        if s["count"]:
+            size_card.metric("Scherrer crystallite size (median)", f"{s['median_nm']:.2f} nm")
+        else:
+            size_card.warning("No justified size estimate.")
+        with chart:
+            render_pattern_chart(pattern, [row["center_deg"] for row in result["peaks"]
+                                           if row["size_nm"] is not None])
         st.markdown("**Coherent-domain length, not grain or particle size.**")
         st.caption(f"Method: Scherrer · {conditions['profile']} FWHM · K = {conditions['k']:g} · λ = {metadata['wavelength_nm']:.6g} nm")
         if s["count"]:
-            st.metric("Scherrer crystallite size (median)",f"{s['median_nm']:.2f} nm")
             variation = f"sample standard deviation {s['std_nm']:.2f} nm" if s['count'] > 1 else "across-peak variation unavailable with one reflection"
             st.caption(f"{s['count']} of {len(result['peaks'])} selected candidates accepted · range {s['min_nm']:.2f}–{s['max_nm']:.2f} nm · {variation}")
             st.caption("Across-peak variation is descriptive; it is not a confidence interval or evidence that the domains are isotropic.")
         else:
-            st.warning("No justified size estimate. Peak widths and individual rejection reasons remain available in the diagnostics.")
+            st.caption("Peak widths and individual rejection reasons remain available in the diagnostics.")
             if not isolated:
                 st.error("Isolation/no-doublet confirmation is missing. Inspect the selected candidates and confirm only those that are physically justified; fitting a local maximum alone does not validate a reflection.")
             else:
