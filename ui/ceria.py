@@ -128,9 +128,10 @@ def render_analysis(data, *, change_data, edit_conditions):
             b.metric("GSAS-II · Rietveld", "Unavailable")
             st.warning("The configured GSAS-II solver could not complete a verified refinement. "
                        "Check its installation or retry. Physics is available on its own.")
-        st.warning("These are coherent-domain sizes under a size-only model. The annealed reference can retain "
-                   "some broadening, and residual strain, anisotropy and different width conventions can "
-                   "affect agreement. The percentage measures disagreement between the two fits.")
+        st.warning("These are coherent-domain sizes. The GSAS-II refinement fixed microstrain at zero as a "
+                   "fitting assumption. The Scherrer estimate assumes negligible strain. The annealed reference "
+                   "can retain some broadening, and residual strain, anisotropy and different width conventions "
+                   "can affect agreement. The percentage measures disagreement between the two fits.")
         st.caption("Physics uses the median of four local Voigt fits and Scherrer K = 1. GSAS-II uses an "
                    "isotropic full-pattern size parameter over 6.7–28.0° 2θ.")
         if st.session_state.get("show_research_tools", False):

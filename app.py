@@ -12,12 +12,13 @@ from ui.validation import render_validation
 from ui.ml_explorer import render_ml_explorer
 
 ROOT=Path(__file__).resolve().parent
-st.set_page_config(page_title="XRD Size–Strain Detective",page_icon="🔬",layout="wide",
+APP_TITLE = "XRD Crystallite Size Analyzer"
+st.set_page_config(page_title=APP_TITLE,page_icon="🔬",layout="wide",
                    initial_sidebar_state="collapsed")
-st.title("XRD Size–Strain Detective")
+st.title(APP_TITLE)
 st.caption("USC MASC 534 · Fall 2026")
 research = st.sidebar.toggle("Research tools", key="show_research_tools",
-                             help="Show the simulator, ML compatibility, and validation evidence.")
+                             help="Enable Williamson–Hall size and microstrain analysis, simulation, and validation.")
 if research:
     analyze, explorer, compare, validation = st.tabs(
         ["Analyze My XRD", "ML Explorer", "ML vs. Physics", "Validation"])
