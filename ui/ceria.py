@@ -9,6 +9,8 @@ from tempfile import TemporaryDirectory
 from time import perf_counter
 from urllib.request import urlopen
 
+from matplotlib.figure import Figure
+from matplotlib.ticker import MaxNLocator
 import pandas as pd
 import streamlit as st
 
@@ -114,6 +116,30 @@ def _refine(content, evidence, *, guided=False):
         return json.loads(output.read_text())["gsas"], f"Live GSAS-II refinement of {source}"
 
 
+def _pattern_preview(pattern, reflections):
+    """Plot the original scan and the centers returned by the size fit."""
+    figure = Figure(figsize=(5.7, 1.68), layout="constrained", facecolor="white")
+    axes = figure.subplots()
+    axes.plot(pattern.two_theta_deg, pattern.intensity, color="#204771", lw=1)
+    axes.margins(x=0)
+    axes.set_xlabel("2θ (degrees)", fontsize=10, labelpad=2)
+    axes.set_ylabel("Intensity", fontsize=10, labelpad=3)
+    axes.xaxis.set_major_locator(MaxNLocator(nbins=6, integer=True))
+    axes.yaxis.set_major_locator(MaxNLocator(nbins=3))
+    axes.tick_params(labelsize=9, length=2, pad=2)
+    for side in ("top", "right"):
+        axes.spines[side].set_visible(False)
+    for index, reflection in enumerate(reflections):
+        center = reflection["observed"]["center_deg"]
+        axes.axvline(center, color="#b45309", lw=1, ls="--")
+        # Stagger the labels for the neighboring (111) and (200) reflections.
+        axes.annotate(f"({reflection['reflection']})", (center, 1),
+                      xycoords=axes.get_xaxis_transform(), xytext=(0, -4 - 12 * (index % 2)),
+                      textcoords="offset points", ha="center", va="top", fontsize=10, color="#9a3412",
+                      bbox={"facecolor": "white", "edgecolor": "none", "pad": 0.5})
+    return figure
+
+
 def render_analysis(data, *, change_data, back_to_conditions):
     st.subheader("3 · Physics and GSAS-II", anchor="ceria-comparison")
     st.button("Back to conditions", on_click=back_to_conditions)
@@ -127,7 +153,8 @@ def render_analysis(data, *, change_data, back_to_conditions):
     if run_comparison:
         started = perf_counter()
         st.session_state.pop("ceria_result", None)
-        with st.status("Analyzing the pattern and checking the matched calibration…", expanded=True) as status:
+        progress = st.empty()
+        with progress.status("Analyzing the pattern and checking the matched calibration…", expanded=True) as status:
             try:
                 evidence = ceria.load_evidence()
                 physics = ceria.physics_comparison(content, evidence["local_reference_fits"])
@@ -150,12 +177,20 @@ def render_analysis(data, *, change_data, back_to_conditions):
                     result.update(gsas=gsas, label=label, difference=diff, percent=percent,
                                   elapsed_s=perf_counter() - started)
                     status.update(label="Comparison complete", state="complete", expanded=False)
+        if "gsas" in st.session_state.get("ceria_result", {}):
+            progress.empty()
 
     result = st.session_state.get("ceria_result")
     if result:
         physics = result["physics"]
-        a, b = st.columns(2)
+        a, b, plot = st.columns([1, 1, 2.4], vertical_alignment="center")
         a.metric("Physics · Scherrer", f"{physics['size_nm']:.2f} nm")
+        with plot:
+            reflections = physics["reflections"]
+            labels = ", ".join(f"({reflection['reflection']})" for reflection in reflections)
+            st.pyplot(_pattern_preview(data["pattern"], reflections), width="stretch",
+                      alt=f"Original ceria XRD scan with Physics fit centers marked at {labels}.")
+            st.caption("Original XRD pattern · Orange lines mark the Physics fit centers.")
         if "gsas" in result:
             gsas = result["gsas"]
             b.metric("GSAS-II · Rietveld", f"{gsas['size_nm']:.2f} nm")
