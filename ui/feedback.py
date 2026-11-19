@@ -10,8 +10,10 @@ def show_problem(kind, detail=""):
                  "Export a plain-text pattern with increasing angles and no missing values. For extra columns, open Column selection and choose the angle and intensity columns."),
         "wavelength": ("Confirm the wavelength", "A source name or approximate value alone does not establish the wavelength used for size analysis.",
                        "Enter the measurement wavelength, select its unit, verify the angular unit, and tick the wavelength confirmation. Check unresolved spectral doublets before fitting."),
-        "geometry": ("Declare the measurement geometry", "The geometry is unknown or outside this powder-analysis workflow. Cu radiation does not identify geometry.",
-                     "Check the instrument record and select the matching powder geometry. If it is another geometry, request a method review before estimating size."),
+        "geometry": ("Declare the measurement geometry", "The app needs to know how the scan was collected. "
+                     "Cu describes the X-ray source.",
+                     "Select the geometry listed in your instrument record or trial file's conditions JSON. "
+                     "For an unfamiliar setup, ask the instrument operator before estimating size."),
         "fit": ("This peak does not support a size estimate", "A reliable isolated-peak width could not be established.",
                 "Select a different isolated reflection or widen the fit window. Inspect the residuals, sampling and chosen profile. Do not fit overlapping peaks or an unresolved spectral doublet as one peak."),
         "instrument": ("Instrument correction is not valid", "The observed peak must be wider than the matching instrumental reference; otherwise sample broadening is unresolved.",

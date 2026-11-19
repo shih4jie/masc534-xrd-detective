@@ -111,12 +111,13 @@ def _details(result,data,conditions,metadata,line_plot):
 
 def render_multi_peak(data,conditions,line_plot):
     # Lazy import preserves the detailed analyzer and its integration metadata.
-    from .analyze import (clear_result, _stage, change_data, workflow_metadata,
+    from .analyze import (clear_result, back_to_conditions, change_data, workflow_metadata,
                           _ml_details, render_gsas_status)
     metadata=workflow_metadata(conditions)
     pattern=data["pattern"];x,y=pattern.two_theta_deg,pattern.intensity
     research = st.session_state.get("show_research_tools", False)
     st.subheader("3 · Detect, fit and analyze")
+    previous_step = st.empty()
     st.caption(f"{len(x):,} uploaded points · {x[0]:.4f}–{x[-1]:.4f}° · median sampling {np.median(np.diff(x)):.6g}°")
     with st.expander("Advanced: peak detection, selection and fit windows"):
         prominence=st.slider("Peak prominence (% of corrected intensity range)",.5,50.,10.,step=.5)/100
@@ -182,6 +183,7 @@ def render_multi_peak(data,conditions,line_plot):
     if saved:
         result=saved["result"];s=result["summary"];wh=result["wh"];r=wh["result"]
         st.subheader("Crystallite size results")
+        st.button("Back to conditions", on_click=back_to_conditions)
         st.markdown("**Coherent-domain length, not grain or particle size.**")
         st.caption(f"Method: Scherrer · {conditions['profile']} FWHM · K = {conditions['k']:g} · λ = {metadata['wavelength_nm']:.6g} nm")
         if s["count"]:
@@ -217,10 +219,11 @@ def render_multi_peak(data,conditions,line_plot):
             st.warning(f"{len(result['peaks'])-s['count']} selected candidates did not produce a size; their fit/correction reasons are retained below.")
         st.caption(f"Data source: {data['name']} · {saved['elapsed_s']:.3f} s analysis computation")
         render_gsas_status()
-        _details(result,data,conditions,metadata,line_plot)
-    if st.button("Edit measurement conditions"):
-        clear_result();_stage(2);st.rerun()
+    else:
+        previous_step.button("Back to conditions", on_click=back_to_conditions)
     st.button("Change data",on_click=change_data)
+    if saved:
+        _details(result,data,conditions,metadata,line_plot)
     _ml_details(pattern,metadata)
     if st.session_state.pop("multi_scroll_result",False):
         st.html("""<script>/* multi result TOKEN */

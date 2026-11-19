@@ -32,21 +32,28 @@ def render_reference_download():
                 st.download_button(label, (ceria.ASSETS / filename).read_bytes(), filename)
 
 
-def render_conditions(data):
+def render_conditions(data, *, back_to_data):
     st.subheader("2 · Confirm conditions")
+    st.button("Back to data", on_click=back_to_data)
     st.caption(f"{data['name']} · original IUCr round-robin measurement matched by file contents.")
     st.info("The published record gives cubic ceria (CeO₂), ESRF BM16, "
             "λ = 0.39982 Å, 2θ in degrees and powder capillary geometry with an analyzer detector.")
     a, b = st.columns([2, 1])
-    value = a.number_input("Wavelength", value=ceria.WAVELENGTH_ANGSTROM,
+    conditions = data.setdefault("ceria_conditions", {})
+    units = ["angstrom", "nm", "pm"]
+    value = a.number_input("Wavelength", value=conditions.get("wavelength", ceria.WAVELENGTH_ANGSTROM),
                            min_value=.00001, format="%.6f", key="bm16_wavelength")
-    unit = b.selectbox("Wavelength unit", ["angstrom", "nm", "pm"], key="bm16_unit")
-    geometry = st.selectbox("Measurement geometry", _GEOMETRIES, key="bm16_geometry")
+    unit = b.selectbox("Wavelength unit", units, index=units.index(conditions.get("unit", units[0])),
+                       key="bm16_unit")
+    geometry = st.selectbox("Measurement geometry", _GEOMETRIES,
+                            index=_GEOMETRIES.index(conditions.get("geometry", _GEOMETRIES[0])),
+                            key="bm16_geometry")
     verified = st.checkbox("I verified these conditions and the CeO₂ phase against the published record.",
-                           key="bm16_verified")
+                           value=conditions.get("verified", False), key="bm16_verified")
     calibration = st.checkbox(
         "I accept the annealed reference as the instrument baseline and a size-only comparison "
-        "with strain fixed to zero.", key="bm16_calibration")
+        "with strain fixed to zero.", value=conditions.get("calibration", False), key="bm16_calibration")
+    conditions.update(wavelength=value, unit=unit, geometry=geometry, verified=verified, calibration=calibration)
     if st.button("Continue to analysis", type="primary"):
         if geometry != ceria.GEOMETRY:
             st.error("Select the recorded powder capillary geometry with an analyzer detector. "
@@ -79,8 +86,9 @@ def _refine(content, evidence):
         return json.loads(output.read_text())["gsas"], "Live GSAS-II refinement of this upload"
 
 
-def render_analysis(data, *, change_data, edit_conditions):
+def render_analysis(data, *, change_data, back_to_conditions):
     st.subheader("3 · Physics and GSAS-II", anchor="ceria-comparison")
+    st.button("Back to conditions", on_click=back_to_conditions)
     st.caption("Measured ceria · ESRF BM16 · 0.39982 Å · analyzer capillary scan")
     content = data["ceria_content"]
     run_comparison = st.button("Compare Physics and GSAS-II", type="primary")
@@ -147,7 +155,6 @@ def render_analysis(data, *, change_data, edit_conditions):
                     st.json(result["gsas"])
                 st.markdown("[IUCr round-robin paper](https://doi.org/10.1107/S0021889804022551) · "
                             "[Phase structure, COD 9009008](https://www.crystallography.net/cod/9009008.html)")
-    st.button("Edit measurement conditions", on_click=edit_conditions)
     st.button("Change data", on_click=change_data)
     if run_comparison and result:
         token = str(int(perf_counter() * 1e9))

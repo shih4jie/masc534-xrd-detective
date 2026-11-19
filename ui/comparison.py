@@ -151,6 +151,9 @@ def render_comparison(line_plot):
     if data is None or st.session_state.get("workflow_stage") != 3:
         st.info("Load a pattern and confirm its measurement conditions in Analyze My XRD, then open this tab. The comparison uses that same pattern.")
         return
+    if "ceria_content" in data:
+        st.info("Use the matched Physics and GSAS-II comparison for this BM16 ceria sample in Analyze My XRD.")
+        return
     conditions = st.session_state["workflow_conditions"]
     metadata = workflow_metadata(conditions)
     peak = st.session_state.get("workflow_peak")
