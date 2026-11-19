@@ -190,21 +190,21 @@ def render_analysis(data, *, change_data, back_to_conditions):
             labels = ", ".join(f"({reflection['reflection']})" for reflection in reflections)
             st.pyplot(_pattern_preview(data["pattern"], reflections), width="stretch",
                       alt=f"Original ceria XRD scan with Physics fit centers marked at {labels}.")
-            st.caption("Original XRD pattern · Orange lines mark the Physics fit centers.")
+            st.caption("Measured XRD · Orange lines show fitted peaks.")
         if "gsas" in result:
             gsas = result["gsas"]
             b.metric("GSAS-II · Rietveld", f"{gsas['size_nm']:.2f} nm")
             st.markdown(f"**Absolute difference {result['difference']:.2f} nm** · "
                         f"**Percent difference {result['percent']:.2f}%**")
-            st.caption(f"{result['label']} · Rwp {gsas['rwp_percent']:.2f}% · "
-                       "Percentage uses the mean of the two sizes as denominator.")
+            st.caption(f"{result['label']} · Rwp {gsas['rwp_percent']:.2f}%")
         else:
             b.metric("GSAS-II · Rietveld", "Unavailable")
             st.warning("The configured GSAS-II solver could not complete a verified refinement. "
                        "Check its installation or retry. Physics is available on its own.")
-        st.warning("Both estimates describe coherent-domain size. The GSAS-II refinement fixed microstrain "
-                   "at zero as a fitting assumption. Scherrer assumes negligible strain.")
+        st.warning("Coherent-domain sizes. GSAS-II fixed microstrain at zero as a fitting assumption. "
+                   "Scherrer assumes negligible strain.")
         with st.expander("How to interpret these estimates"):
+            st.write("The percentage difference uses the mean of the two sizes as its denominator.")
             st.write("The annealed reference can retain broadening. Residual strain, anisotropy, and width "
                      "conventions can affect agreement between the fits.")
             st.caption("Physics uses four local Voigt fits and Scherrer K = 1. GSAS-II uses an "
