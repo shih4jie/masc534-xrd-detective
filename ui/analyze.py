@@ -174,13 +174,12 @@ def _request_trial():
 
 def _load_step(root):
     st.subheader("1 · Choose data")
-    if loaded := st.session_state.get("workflow_data"):
-        st.caption(f"Loaded data · {loaded['name']} · 2θ in {loaded['angle_unit']}")
-        st.button("Continue with loaded data", on_click=_stage, args=(2,))
-    st.write("Upload your own pattern or choose one of five trial patterns.")
     source = st.selectbox("Data source", (UPLOAD_SOURCE, CERIA_TRIAL, *TRIAL_FILES),
                           key="workflow_source", on_change=_request_trial)
     selected = st.session_state.pop("trial_selected", False)
+    if loaded := st.session_state.get("workflow_data"):
+        st.caption(f"Loaded data · {loaded['name']} · 2θ in {loaded['angle_unit']}")
+        st.button("Continue with loaded data", on_click=_stage, args=(2,))
     if source != UPLOAD_SOURCE:
         if st.button("Load selected sample", type="primary") or selected:
             _load_trial(root, source)
@@ -190,7 +189,8 @@ def _load_step(root):
         return
 
     file = st.file_uploader("2theta and intensity", type=["csv", "txt", "xy", "dat"])
-    angle_unit = st.selectbox("Uploaded 2theta unit", ["degrees", "radians"])
+    action, units = st.columns([1, 2], vertical_alignment="bottom")
+    angle_unit = units.selectbox("Uploaded 2theta unit", ["degrees", "radians"])
     with st.expander("Column selection (only for files with extra columns)"):
         st.caption("Select columns if your file has extra unlabeled numeric columns.")
         explicit = st.checkbox("Choose columns explicitly (files with more than two columns)")
@@ -199,7 +199,7 @@ def _load_step(root):
             a, b = st.columns(2)
             columns = (int(a.number_input("Angle column (zero based)", 0, 20, 0)),
                        int(b.number_input("Intensity column (zero based)", 0, 20, 1)))
-    if st.button("Load uploaded data", type="primary"):
+    if action.button("Load uploaded data", type="primary"):
         if file is None:
             st.session_state["workflow_problem"] = ("missing_file", "")
         elif Path(file.name).suffix.lower() not in {".csv", ".txt", ".xy", ".dat"}:
