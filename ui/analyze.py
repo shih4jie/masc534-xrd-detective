@@ -26,7 +26,6 @@ TRIAL_FILES = {
     "Synthetic Gaussian single peak · 40 nm": "synthetic_40nm_gaussian",
     "Synthetic Gaussian six peaks · 80 nm": "multi_peak_gaussian_synthetic",
     "Synthetic Lorentzian six peaks · 80 nm": "multi_peak_lorentzian_synthetic",
-    "Measured NIST ZnO · APS 11-BM": "nist_srm1979_5866_experimental",
 }
 
 
@@ -74,12 +73,7 @@ def _defaults(example=None):
             "profile":"Gaussian", "instrument_mode":"Unknown", "instrument":.1,
             "reference":"", "calibration_confirmed":False, "k":.9,
             "size_dominated":False,"instrument_reviewed":False,"calibration_table":None}
-    if example and example.get("data_kind") == "experimental":
-        conditions.update(material=example["material"], wl_value=example["wavelength_angstrom"],
-                          geometry=example["geometry"], profile="Lorentzian", k=example["shape_factor"],
-                          size_dominated=example["size_dominated_established"], instrument_reviewed=True,
-                          instrument_name=example["instrument"], phases="ZnO")
-    elif example is not None:
+    if example is not None:
         conditions.update(wl_value=example["wavelength_nm"], wl_unit="nm",
                           geometry="Synthetic powder-like isolated peak", profile=example["profile"],
                           instrument_mode="Declared simplified constant width",
@@ -90,7 +84,7 @@ def _defaults(example=None):
 
 def _load(content, name, angle_unit, columns, *, example=None, guided_ceria=False):
     clear_result()
-    teaching = example is not None and example.get("data_kind") != "experimental"
+    teaching = example is not None
     try:
         matched_ceria = not teaching and ceria.is_sample(content)
         if guided_ceria and not matched_ceria:
@@ -106,8 +100,6 @@ def _load(content, name, angle_unit, columns, *, example=None, guided_ceria=Fals
                 candidates = np.asarray(example["centers_deg"], dtype=float)
             elif example and "two_theta_center_deg" in example:
                 candidates = np.array([example["two_theta_center_deg"]])
-            elif example and "fit_window_deg" in example:
-                candidates = np.array([np.mean(example["fit_window_deg"])])
             status.update(label="Data loaded", state="complete", expanded=False)
         fingerprint = hashlib.sha256(content + repr((name, angle_unit, columns, teaching, guided_ceria)).encode()).hexdigest()
         st.session_state["workflow_data"] = {"pattern":pattern, "candidates":candidates,
@@ -321,18 +313,11 @@ def _review_conditions(conditions, teaching, example, single_sample):
                                value=conditions["verified"], key="demo_wavelength_verified")
         calibration_error = _measurement_fields(conditions, teaching, verified)
     elif example:
-        unit = "Å" if conditions["wl_unit"] == "angstrom" else conditions["wl_unit"]
-        st.markdown(f"**Wavelength** {conditions['wl_value']:g} {unit} · **Geometry** {conditions['geometry']}")
-        if teaching:
-            st.caption(f"Simulated {example['profile'].lower()} peaks · instrument FWHM "
-                       f"{example['instrument_fwhm_deg']:g}° · microstrain {example['microstrain']*100:g}%")
-            verified = st.checkbox("I reviewed the synthetic example settings",
-                                   value=conditions["verified"], key="demo_wavelength_verified")
-        else:
-            st.info("This measured sample demonstrates the ZnO 002 peak width. The dataset does not "
-                    "supply the instrumental width needed for a corrected size.")
-            verified = st.checkbox("I reviewed the published sample conditions", value=conditions["verified"])
-        conditions["verified"] = verified
+        st.markdown(f"**Wavelength** {conditions['wl_value']:g} nm · **Geometry** {conditions['geometry']}")
+        st.caption(f"Simulated {example['profile'].lower()} peaks · instrument FWHM "
+                   f"{example['instrument_fwhm_deg']:g}° · microstrain {example['microstrain']*100:g}%")
+        conditions["verified"] = st.checkbox("I reviewed the synthetic example settings",
+                                              value=conditions["verified"], key="demo_wavelength_verified")
     else:
         calibration_error = _measurement_fields(conditions, teaching, None)
     metadata = workflow_metadata(conditions)
@@ -419,23 +404,17 @@ def render_gsas_status():
 def _result(data, conditions, saved, line_plot):
     result = saved["result"]
     fit = result["fit"]
-    example = data.get("example") or {}
-    width_only_example = example.get("data_kind") == "experimental" and fit.usable
     st.subheader("3 · Result")
     st.button("Back to conditions", on_click=back_to_conditions)
     size_card, chart = st.columns([1, 1.9], vertical_alignment="center")
     size = result["size_nm"]
     if size is not None:
         size_card.metric("Scherrer size", f"{size:.2f} nm")
-    elif width_only_example:
-        size_card.metric("ZnO 002 peak FWHM", f"{fit.fwhm_deg:.5f}° 2θ")
     else:
         size_card.warning("No justified size estimate.")
     with chart:
         render_pattern_chart(data["pattern"], [fit.center_deg] if size is not None else [])
     st.markdown("**Coherent-domain size** — the length over which the crystal diffracts coherently; this is not grain size.")
-    if width_only_example:
-        st.info("A corrected crystallite size requires a matching instrumental width and a supported strain assumption.")
     method = "Scherrer" if result["size_nm"] is not None else "Peak fit; size withheld"
     st.write(f"**Method:** {method} · {conditions['profile']} FWHM")
     st.subheader(result["category"])
@@ -448,7 +427,7 @@ def _result(data, conditions, saved, line_plot):
         elif conditions["instrument_mode"]=="Declared simplified constant width":
             st.warning("Important limit: instrument width is an assumed constant, not a measured calibration.")
         st.caption("Size assumes negligible strain/defect broadening, an isolated reflection, and the selected profile/K convention.")
-    elif not width_only_example:
+    else:
         show_problem("fit" if not result["fit"].usable else "size_evidence", "; ".join(result["warnings"]))
     for note in result["warnings"]:
         if "Instrument-dominated" in note or "Negative intensities" in note or "Uneven sampling" in note:
@@ -561,11 +540,10 @@ def _analysis_step(data, line_plot):
     if saved:
         clear_result()
         st.info("Previous results cleared because data or analysis conditions changed.")
-    teaching = data["teaching"]
     example = data.get("example")
     heading = "3 · Select a reflection and analyze"
     if example:
-        heading = "3 · Analyze the synthetic example" if teaching else "3 · Fit the ZnO 002 peak"
+        heading = "3 · Analyze the synthetic example"
     st.subheader(heading)
     st.button("Back to conditions", on_click=back_to_conditions)
     if example:
@@ -595,6 +573,10 @@ def _analysis_step(data, line_plot):
 
 
 def render_analysis(root, line_plot):
+    loaded = st.session_state.get("workflow_data") or {}
+    if (loaded.get("example") or {}).get("data_kind") == "experimental":
+        change_data()
+        st.session_state.pop("workflow_source", None)
     stage = st.session_state.setdefault("workflow_stage",1)
     steps = ["1 Choose data", "2 Confirm conditions", "3 Analyze"]
     steps[stage - 1] = f"**{steps[stage - 1]}**"
