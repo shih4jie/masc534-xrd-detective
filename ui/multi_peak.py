@@ -204,6 +204,10 @@ def render_multi_peak(data,conditions,line_plot):
         size_card, chart = st.columns([1, 1.9], vertical_alignment="center")
         if s["count"]:
             size_card.metric("Scherrer crystallite size (median)", f"{s['median_nm']:.2f} nm")
+            if example and example["microstrain"] > 0:
+                size_card.caption(f"The simulated size is {example['known_size_nm']:g} nm, and "
+                                  f"{example['microstrain']:.2%} microstrain broadens the peaks, "
+                                  "so Scherrer’s size-only estimate is lower.")
         else:
             size_card.warning("No justified size estimate.")
         with chart:
